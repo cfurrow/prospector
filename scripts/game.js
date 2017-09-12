@@ -18,23 +18,25 @@ function create() {
   this.miner.animations.add('walk-down',       [4, 9, 14, 19, 24], 10, true);
 
   this.mine = this.game.add.sprite(500, 400, 'mine', 0);
-  this.mine.smoothed = false;
-  this.mine.scale.set(2,2);
   this.mine.anchor.set(0.5,0.5);
+  this.mine.scale.set(2,2);
+  this.mine.smoothed = false;
 
   this.game.physics.arcade.enable([this.miner, this.mine]);
   this.miner.body.collideWorldBounds = true;
+  this.miner.body.setSize(72 / this.miner.scale.x, 72 / this.miner.scale.y, 72 / this.miner.scale.x, 72 / this.miner.scale.y);
+
   this.mine.body.immovable = true;
+  this.mine.body.setSize(40, 40, 16, 48);
 }
 
 function mineSomeGold() {
-  console.log("mine mine mine");
   this.mine.frame = 1;
 }
 
 function update() {
   var speed = 5;
-  this.mine.frame = 0;
+  this.mine.frame = 0; // reset to "off"
 
   this.game.physics.arcade.collide(this.miner, this.mine, mineSomeGold, null, this);
 
@@ -77,8 +79,14 @@ function update() {
   }
 }
 
+function render () {
+  // this.game.debug.body(this.miner);
+  // this.game.debug.body(this.mine);
+}
+
 var game = new Phaser.Game(800, 600, Phaser.AUTO, '', {
   preload: preload,
   create: create,
-  update: update
+  update: update,
+  render: render
 });
