@@ -1,11 +1,11 @@
 function preload() {
-  this.game.load.spritesheet('miner', '/assets/miner.png', 72, 72, 65, 10);
+  this.game.load.spritesheet('miner', '/assets/miner.png', 72, 72, 65, 0);
   this.game.load.spritesheet('miner-with-gold', '/assets/miner-with-gold.png', 72, 72);
   this.game.load.spritesheet('mine', '/assets/gold-mine.png', 96, 96);
 }
 
 function create() {
-  this.miner = this.game.add.sprite(72, 72, 'miner', 2);
+  this.miner = this.game.add.sprite(150, 150, 'miner', 2);
   this.miner.anchor.set(0.5, 0.5);
   this.miner.scale.set(3,3);
   this.miner.smoothed = false;
