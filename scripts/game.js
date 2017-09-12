@@ -5,6 +5,8 @@ function preload() {
 }
 
 function create() {
+  this.game.physics.startSystem(Phaser.Physics.ARCADE);
+
   this.miner = this.game.add.sprite(150, 150, 'miner', 2);
   this.miner.anchor.set(0.5, 0.5);
   this.miner.scale.set(3,3);
@@ -15,15 +17,26 @@ function create() {
   this.miner.animations.add('walk-down-right', [3, 8, 13, 18, 23], 10, true);
   this.miner.animations.add('walk-down',       [4, 9, 14, 19, 24], 10, true);
 
-
   this.mine = this.game.add.sprite(500, 400, 'mine', 0);
   this.mine.smoothed = false;
   this.mine.scale.set(2,2);
   this.mine.anchor.set(0.5,0.5);
+
+  this.game.physics.arcade.enable([this.miner, this.mine]);
+  this.miner.body.collideWorldBounds = true;
+  this.mine.body.immovable = true;
+}
+
+function mineSomeGold() {
+  console.log("mine mine mine");
+  this.mine.frame = 1;
 }
 
 function update() {
   var speed = 5;
+  this.mine.frame = 0;
+
+  this.game.physics.arcade.collide(this.miner, this.mine, mineSomeGold, null, this);
 
   if (this.game.input.keyboard.isDown(Phaser.KeyCode.LEFT)) {
     this.miner.x -= speed;
