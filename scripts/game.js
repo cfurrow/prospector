@@ -2,6 +2,7 @@ function preload() {
   this.game.load.spritesheet('miner', 'assets/miner.png', 72, 72, 65, 0);
   this.game.load.spritesheet('miner-with-gold', 'assets/miner-with-gold.png', 72, 72);
   this.game.load.spritesheet('mine', 'assets/gold-mine.png', 96, 96);
+  this.game.load.spritesheet('blood', 'assets/blood.png');
 
   this.game.load.image('confusion', 'assets/infusionsoft.png', 300, 300);
 }
@@ -41,9 +42,11 @@ function create() {
   this.mine.scale.set(2,2);
   this.mine.smoothed = false;
 
-  this.confusion = this.game.add.sprite(100, 400, 'confusion');
+  this.confusion = this.game.add.sprite(50, 550, 'confusion');
   this.confusion.anchor.set(0.5, 0.5);
-  this.confusion.scale.set(0.5, 0.5);
+  this.confusion.scale.set(0.3, 0.3);
+  var confusionTween = this.game.add.tween(this.confusion);
+  confusionTween.to({x: 750}, 5500, Phaser.Easing.Elastic.InOut, true, 0, -1, true);
 
   this.game.physics.arcade.enable([this.miner, this.mine]);
   this.miner.body.collideWorldBounds = true;
@@ -51,7 +54,6 @@ function create() {
 
   this.mine.body.immovable = true;
   this.mine.body.setSize(40, 40, 16, 48);
-
 }
 
 function mineSomeGold() {
