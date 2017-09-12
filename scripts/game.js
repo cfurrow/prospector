@@ -1,7 +1,7 @@
 function preload() {
-  this.game.load.spritesheet('miner', '/assets/miner.png', 72, 72, 65, 0);
-  this.game.load.spritesheet('miner-with-gold', '/assets/miner-with-gold.png', 72, 72);
-  this.game.load.spritesheet('mine', '/assets/gold-mine.png', 96, 96);
+  this.game.load.spritesheet('miner', 'assets/miner.png', 72, 72, 65, 0);
+  this.game.load.spritesheet('miner-with-gold', 'assets/miner-with-gold.png', 72, 72);
+  this.game.load.spritesheet('mine', 'assets/gold-mine.png', 96, 96);
 }
 
 function create() {
