@@ -14,6 +14,12 @@ function create() {
   this.miner.animations.add('walk-right',      [2, 7, 12, 17, 22], 10, true);
   this.miner.animations.add('walk-down-right', [3, 8, 13, 18, 23], 10, true);
   this.miner.animations.add('walk-down',       [4, 9, 14, 19, 24], 10, true);
+
+
+  this.mine = this.game.add.sprite(500, 400, 'mine', 0);
+  this.mine.smoothed = false;
+  this.mine.scale.set(2,2);
+  this.mine.anchor.set(0.5,0.5);
 }
 
 function update() {
