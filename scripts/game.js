@@ -107,12 +107,12 @@ function update() {
     this.miner.animations.play('walk-down');
     this.direction = Directions.DOWN;
   } else {
-    if(!this.game.input.keyboard.isDown(Phaser.KeyCode.A)) {
+    if(!this.game.input.keyboard.isDown(Phaser.KeyCode.SPACEBAR)) {
       this.miner.animations.stop();
     }
   }
 
-  if(this.game.input.keyboard.isDown(Phaser.KeyCode.A)) {
+  if(this.game.input.keyboard.isDown(Phaser.KeyCode.SPACEBAR)) {
     attack(this.miner, this.direction);
   }
 }
@@ -146,7 +146,6 @@ function attack(miner, direction) {
       break;
   }
 
-  console.log("Attack: ", {direction: direction, animation: animation})
   miner.animations.play(animation);
 }
 
