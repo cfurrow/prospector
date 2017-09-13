@@ -37,6 +37,13 @@ function create() {
   this.miner.animations.add('swing-down-right', [28, 33, 38, 43, 48], 10, true);
   this.miner.animations.add('swing-down',       [29, 34, 39, 44, 49], 10, true);
 
+  var hitboxes = this.game.add.group();
+  hitboxes.enableBody = true;
+  this.miner.addChild(hitboxes);
+  this.axHitbox = hitboxes.create(20,-10,null);
+  this.axHitbox.anchor.set(0.5,0.5);
+  this.axHitbox.body.setSize(50,50,0,0);
+
   this.mine = this.game.add.sprite(500, 400, 'mine', 0);
   this.mine.anchor.set(0.5,0.5);
   this.mine.scale.set(2,2);
@@ -44,7 +51,7 @@ function create() {
 
   this.blood = this.game.add.sprite(0,0, 'blood');
   this.blood.visible = false;
-  this.blood.scale.set(4,4);
+  this.blood.scale.set(6,6);
   this.blood.anchor.set(0.5,0.5);
   this.blood.smoothed = false;
   var bloodAnimation = this.blood.animations.add('squirt', [0,5,10], 5, false);
@@ -88,7 +95,7 @@ function update() {
   this.mine.frame = 0; // reset to "off"
 
   this.game.physics.arcade.collide(this.miner, this.mine, mineSomeGold, null, this);
-  this.game.physics.arcade.collide(this.miner, this.confusion, attackConfusion, null, this);
+  this.game.physics.arcade.collide(this.axHitbox, this.confusion, attackConfusion, null, this);
 
   if (this.game.input.keyboard.isDown(Phaser.KeyCode.LEFT)) {
     this.miner.x -= speed;
@@ -172,6 +179,9 @@ function attack(miner, direction) {
     case Directions.UP_LEFT:
       animation = 'swing-up-right';
       break;
+    default:
+      animation = 'swing-right';
+      break;
   }
 
   miner.animations.play(animation);
@@ -180,6 +190,7 @@ function attack(miner, direction) {
 function render () {
   // this.game.debug.body(this.miner);
   // this.game.debug.body(this.mine);
+  //this.game.debug.body(this.axHitbox);
 }
 
 var game = new Phaser.Game(800, 600, Phaser.AUTO, '', {
