@@ -2,7 +2,7 @@ function preload() {
   this.game.load.spritesheet('miner', 'assets/miner.png', 72, 72, 65, 0);
   this.game.load.spritesheet('miner-with-gold', 'assets/miner-with-gold.png', 72, 72);
   this.game.load.spritesheet('mine', 'assets/gold-mine.png', 96, 96);
-  this.game.load.spritesheet('blood', 'assets/blood.png');
+  this.game.load.spritesheet('blood', 'assets/blood.png', 32, 32, -1, 32, 32);
 
   this.game.load.image('confusion', 'assets/infusionsoft.png', 300, 300);
 }
@@ -42,13 +42,24 @@ function create() {
   this.mine.scale.set(2,2);
   this.mine.smoothed = false;
 
+  this.blood = this.game.add.sprite(0,0, 'blood');
+  this.blood.visible = false;
+  this.blood.scale.set(4,4);
+  this.blood.anchor.set(0.5,0.5);
+  this.blood.smoothed = false;
+  var bloodAnimation = this.blood.animations.add('squirt', [0,5,10], 5, false);
+  bloodAnimation.onComplete.add(function(sprite, animation){ sprite.visible=false; }, this);
+
   this.confusion = this.game.add.sprite(50, 550, 'confusion');
   this.confusion.anchor.set(0.5, 0.5);
   this.confusion.scale.set(0.3, 0.3);
+  this.confusion.addChild(this.blood);
+
   var confusionTween = this.game.add.tween(this.confusion);
   confusionTween.to({x: 750}, 5500, Phaser.Easing.Elastic.InOut, true, 0, -1, true);
 
-  this.game.physics.arcade.enable([this.miner, this.mine]);
+  this.game.physics.arcade.enable([this.miner, this.mine, this.confusion]);
+
   this.miner.body.collideWorldBounds = true;
   this.miner.body.setSize(72 / this.miner.scale.x, 72 / this.miner.scale.y, 72 / this.miner.scale.x, 72 / this.miner.scale.y);
 
@@ -60,12 +71,24 @@ function mineSomeGold() {
   this.mine.frame = 1;
 }
 
+function attackConfusion() {
+  if(!this.minerAttacking) {
+    this.blood.visible = false;
+    return;
+  }
+  this.blood.visible = true;
+  var bloodAnimation = this.blood.animations.getAnimation('squirt');
+  if(!bloodAnimation.isPlaying) {
+    this.blood.animations.play('squirt');
+  }
+}
+
 function update() {
   var speed = 5;
   this.mine.frame = 0; // reset to "off"
-  //this.direction = Directions.RIGHT; // right
 
   this.game.physics.arcade.collide(this.miner, this.mine, mineSomeGold, null, this);
+  this.game.physics.arcade.collide(this.miner, this.confusion, attackConfusion, null, this);
 
   if (this.game.input.keyboard.isDown(Phaser.KeyCode.LEFT)) {
     this.miner.x -= speed;
@@ -115,7 +138,10 @@ function update() {
   }
 
   if(this.game.input.keyboard.isDown(Phaser.KeyCode.SPACEBAR)) {
+    this.minerAttacking = true;
     attack(this.miner, this.direction);
+  } else {
+    this.minerAttacking = false;
   }
 }
 
