@@ -28,14 +28,10 @@ function create() {
 
   this.map = game.add.tilemap('cave');
   this.map.addTilesetImage('cave3', 'cave');
-  this.map.addTilesetImage('overworld', 'grass');
-  this.map.addTilesetImage('grass2.png');
-  this.map.addTilesetImage('infusionsoft.png', 'confusion');
+
   this.layer = this.map.createLayer('Overworld');
-  this.layer.scale.set(3);
+  this.layer.setScale(3);
   this.layer.resizeWorld();
-  // layer = this.map.createLayer('Gold Mine');
-  // layer.scale.set(3);
 
   this.miner = this.game.add.sprite(150, 150, 'miner', 2);
   this.miner.anchor.set(0.5, 0.5);
@@ -100,11 +96,14 @@ function mineSomeGold() {
 
 function enterGoldMine() {
   this.mine.kill();
-  this.miner.position.set(550, 150);
+  this.miner.position.set(550, 200);
   this.layer.destroy();
   this.layer = this.map.createLayer('Gold Mine');
-  this.layer.scale.set(3);
+  this.map.setCollisionByExclusion([83,84,85,99,100,101,112,113,128,129,144,145,160,161,115,131,147,148]);
+  this.layer.setScale(3);
   this.layer.sendToBack();
+  this.layer.resizeWorld();
+
 }
 
 function exitGoldMine() {
@@ -128,60 +127,73 @@ function attackConfusion() {
 }
 
 function update() {
-  var speed = 5;
+  var speed = 200;
   //this.mine.frame = 0; // reset to "off"
 
   this.game.physics.arcade.collide(this.miner, this.mine, mineSomeGold, null, this);
+  this.game.physics.arcade.collide(this.miner, this.layer);
   //this.game.physics.arcade.collide(this.axHitbox, this.confusion, attackConfusion, null, this);
 
   if (this.game.input.keyboard.isDown(Phaser.KeyCode.LEFT)) {
-    this.miner.x -= speed;
+    // this.miner.x -= speed;
+    this.miner.body.velocity.x = -speed;
     this.miner.scale.x = -Math.abs(this.miner.scale.x);
     this.direction = Directions.LEFT; // left;
 
     if(this.game.input.keyboard.isDown(Phaser.KeyCode.DOWN)){
       this.miner.animations.play('walk-down-right');
-      this.miner.y += speed;
+      this.miner.body.velocity.y = speed;
+      // this.miner.y += speed;
       this.direction = Directions.DOWN_LEFT;
     }else if(this.game.input.keyboard.isDown(Phaser.KeyCode.UP)){
       this.miner.animations.play('walk-up-right');
-      this.miner.y -= speed;
+      this.miner.body.velocity.y = -speed;
+      // this.miner.y -= speed;
       this.direction = Directions.UP_LEFT;
     }else {
       this.miner.animations.play('walk-right');
     }
   }
   else if (this.game.input.keyboard.isDown(Phaser.KeyCode.RIGHT)) {
-    this.miner.x += speed;
+    this.miner.body.velocity.x = speed;
+    // this.miner.x += speed;
     this.miner.scale.x = Math.abs(this.miner.scale.x);
     this.direction = Directions.RIGHT;
 
     if(this.game.input.keyboard.isDown(Phaser.KeyCode.DOWN)){
       this.miner.animations.play('walk-down-right');
-      this.miner.y += speed;
+      this.miner.body.velocity.y = speed;
+      // this.miner.y += speed;
       this.direction = Directions.DOWN_RIGHT;
     }else if(this.game.input.keyboard.isDown(Phaser.KeyCode.UP)){
       this.miner.animations.play('walk-up-right');
-      this.miner.y -= speed;
+      this.miner.body.velocity.y = -speed;
+      // this.miner.y -=speed;
       this.direction = Directions.DOWN_LEFT;
     }else {
       this.miner.animations.play('walk-right');
     }
   } else if (this.game.input.keyboard.isDown(Phaser.KeyCode.UP)) {
-    this.miner.y -= speed;
+    this.miner.body.velocity.y = -speed;
+    // this.miner.y -= speed;
     this.miner.animations.play('walk-up');
     this.direction = Directions.UP;
   } else if (this.game.input.keyboard.isDown(Phaser.KeyCode.DOWN)) {
-    this.miner.y += speed;
+    this.miner.body.velocity.y = speed;
+    // this.miner.y += speed;
     this.miner.animations.play('walk-down');
     this.direction = Directions.DOWN;
   } else {
     if(!this.game.input.keyboard.isDown(Phaser.KeyCode.SPACEBAR)) {
       this.miner.animations.stop();
+      this.miner.body.velocity.x = 0;
+      this.miner.body.velocity.y = 0;
     }
   }
 
   if(this.game.input.keyboard.isDown(Phaser.KeyCode.SPACEBAR)) {
+    this.miner.body.velocity.x = 0;
+    this.miner.body.velocity.y = 0;
     this.minerAttacking = true;
     attack(this.miner, this.direction);
   } else {
@@ -225,9 +237,10 @@ function attack(miner, direction) {
 }
 
 function render () {
-  // this.game.debug.body(this.miner);
+  //this.game.debug.body(this.miner);
   // this.game.debug.body(this.mine);
   //this.game.debug.body(this.axHitbox);
+  //this.layer.debug = true;
 }
 
 var game = new Phaser.Game(800, 600, Phaser.AUTO, '', {
