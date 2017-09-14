@@ -4,6 +4,8 @@ function preload() {
   this.game.load.spritesheet('mine', 'assets/gold-mine.png', 96, 96);
   this.game.load.spritesheet('blood', 'assets/blood.png', 32, 32, -1, 32, 32);
 
+  this.game.load.spritesheet('squirrel', 'assets/Monster-squirrel.png', 32, 32, -1);
+
   this.game.load.image('confusion', 'assets/infusionsoft.png', 300, 300);
 
   this.game.load.tilemap('cave', 'assets/levels/cave.json', null, Phaser.Tilemap.TILED_JSON);
@@ -33,6 +35,12 @@ function create() {
   this.layer.setScale(3);
   this.layer.resizeWorld();
 
+  this.squirrel = this.game.add.sprite(100,100, 'squirrel', 1);
+  this.squirrel.scale.set(2);
+  this.squirrel.smoothed = false;
+  this.squirrel.animations.add('run', [0,1,2,3,4,5,6,7], 10, true);
+  this.squirrel.animations.play('run');
+
   this.miner = this.game.add.sprite(150, 150, 'miner', 2);
   this.miner.anchor.set(0.5, 0.5);
   this.miner.scale.set(3,3);
@@ -48,6 +56,8 @@ function create() {
   this.miner.animations.add('swing-right',      [27, 32, 37, 42, 47], 10, true);
   this.miner.animations.add('swing-down-right', [28, 33, 38, 43, 48], 10, true);
   this.miner.animations.add('swing-down',       [29, 34, 39, 44, 49], 10, true);
+
+
 
   var hitboxes = this.game.add.group();
   hitboxes.enableBody = true;
@@ -80,6 +90,7 @@ function create() {
   this.game.physics.arcade.enable([this.miner, this.mine]);
 
   this.miner.body.collideWorldBounds = true;
+  this.miner.body.allowDrag = true;
   this.miner.body.setSize(72 / this.miner.scale.x, 72 / this.miner.scale.y, 72 / this.miner.scale.x, 72 / this.miner.scale.y);
 
   this.mine.body.immovable = true;
