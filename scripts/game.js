@@ -1,10 +1,9 @@
 function preload() {
-  this.game.load.spritesheet('miner', 'assets/miner.png', 72, 72, 65, 0);
-  this.game.load.spritesheet('miner-with-gold', 'assets/miner-with-gold.png', 72, 72);
-  this.game.load.spritesheet('mine', 'assets/gold-mine.png', 96, 96);
+  Miner.preload(this.game);
   this.game.load.spritesheet('blood', 'assets/blood.png', 32, 32, -1, 32, 32);
 
   this.game.load.spritesheet('squirrel', 'assets/Monster-squirrel.png', 32, 32, -1);
+  this.game.load.spritesheet('squirrel-run', 'assets/squirrel-run.png', 32, 32, -1);
 
   this.game.load.image('confusion', 'assets/infusionsoft.png', 300, 300);
 
@@ -14,19 +13,10 @@ function preload() {
   this.game.load.image('grass2', 'assets/levels/grass2.png');
 }
 
-var Directions = {
-  UP: 0,
-  UP_RIGHT: 1,
-  RIGHT: 2,
-  DOWN_RIGHT: 3,
-  DOWN: 4,
-  DOWN_LEFT: 5,
-  LEFT: 6,
-  UP_LEFT: 7
-};
-
 function create() {
   this.game.physics.startSystem(Phaser.Physics.ARCADE);
+  this.miner = new Miner(game, 150, 150);
+  this.miner.create();
 
   this.map = game.add.tilemap('cave');
   this.map.addTilesetImage('cave3', 'cave');
@@ -39,35 +29,11 @@ function create() {
     var squirrel = this.game.add.sprite(this.game.rnd.between(0,2000),this.game.rnd.between(0,2000), 'squirrel', 1);
     squirrel.scale.set(2);
     squirrel.smoothed = false;
-    squirrel.animations.add('run', [0,1,2,3,4,5,6,7], 10, true);
+    squirrel.animations.add('idle', [0,1,2,3,4,5,6,7], 10, true);
+
+    squirrel.animations.add('run', [32,33,34], 10, true);
     squirrel.animations.play('run');
   }
-
-
-  this.miner = this.game.add.sprite(150, 150, 'miner', 2);
-  this.miner.anchor.set(0.5, 0.5);
-  this.miner.scale.set(3,3);
-  this.miner.smoothed = false;
-  this.miner.animations.add('walk-up',          [0, 5, 10, 15, 20], 10, true);
-  this.miner.animations.add('walk-up-right',    [1, 6, 11, 16, 21], 10, true);
-  this.miner.animations.add('walk-right',       [2, 7, 12, 17, 22], 10, true);
-  this.miner.animations.add('walk-down-right',  [3, 8, 13, 18, 23], 10, true);
-  this.miner.animations.add('walk-down',        [4, 9, 14, 19, 24], 10, true);
-
-  this.miner.animations.add('swing-up',         [25, 30, 35, 40, 45], 10, true);
-  this.miner.animations.add('swing-up-right',   [26, 31, 36, 41, 46], 10, true);
-  this.miner.animations.add('swing-right',      [27, 32, 37, 42, 47], 10, true);
-  this.miner.animations.add('swing-down-right', [28, 33, 38, 43, 48], 10, true);
-  this.miner.animations.add('swing-down',       [29, 34, 39, 44, 49], 10, true);
-
-
-
-  var hitboxes = this.game.add.group();
-  hitboxes.enableBody = true;
-  this.miner.addChild(hitboxes);
-  this.axHitbox = hitboxes.create(20,-10,null);
-  this.axHitbox.anchor.set(0.5,0.5);
-  this.axHitbox.body.setSize(50,50,0,0);
 
   this.mine = this.game.add.sprite(500, 400, 'mine', 0);
   this.mine.anchor.set(0.5,0.5);
@@ -129,7 +95,7 @@ function exitGoldMine() {
 }
 
 function attackConfusion() {
-  if(!this.minerAttacking) {
+  if(!this.miner.attacking) {
     this.blood.visible = false;
     return;
   }
@@ -148,71 +114,7 @@ function update() {
   this.game.physics.arcade.collide(this.miner, this.layer);
   //this.game.physics.arcade.collide(this.axHitbox, this.confusion, attackConfusion, null, this);
 
-  if (this.game.input.keyboard.isDown(Phaser.KeyCode.LEFT)) {
-    // this.miner.x -= speed;
-    this.miner.body.velocity.x = -speed;
-    this.miner.scale.x = -Math.abs(this.miner.scale.x);
-    this.direction = Directions.LEFT; // left;
-
-    if(this.game.input.keyboard.isDown(Phaser.KeyCode.DOWN)){
-      this.miner.animations.play('walk-down-right');
-      this.miner.body.velocity.y = speed;
-      // this.miner.y += speed;
-      this.direction = Directions.DOWN_LEFT;
-    }else if(this.game.input.keyboard.isDown(Phaser.KeyCode.UP)){
-      this.miner.animations.play('walk-up-right');
-      this.miner.body.velocity.y = -speed;
-      // this.miner.y -= speed;
-      this.direction = Directions.UP_LEFT;
-    }else {
-      this.miner.animations.play('walk-right');
-    }
-  }
-  else if (this.game.input.keyboard.isDown(Phaser.KeyCode.RIGHT)) {
-    this.miner.body.velocity.x = speed;
-    // this.miner.x += speed;
-    this.miner.scale.x = Math.abs(this.miner.scale.x);
-    this.direction = Directions.RIGHT;
-
-    if(this.game.input.keyboard.isDown(Phaser.KeyCode.DOWN)){
-      this.miner.animations.play('walk-down-right');
-      this.miner.body.velocity.y = speed;
-      // this.miner.y += speed;
-      this.direction = Directions.DOWN_RIGHT;
-    }else if(this.game.input.keyboard.isDown(Phaser.KeyCode.UP)){
-      this.miner.animations.play('walk-up-right');
-      this.miner.body.velocity.y = -speed;
-      // this.miner.y -=speed;
-      this.direction = Directions.DOWN_LEFT;
-    }else {
-      this.miner.animations.play('walk-right');
-    }
-  } else if (this.game.input.keyboard.isDown(Phaser.KeyCode.UP)) {
-    this.miner.body.velocity.y = -speed;
-    // this.miner.y -= speed;
-    this.miner.animations.play('walk-up');
-    this.direction = Directions.UP;
-  } else if (this.game.input.keyboard.isDown(Phaser.KeyCode.DOWN)) {
-    this.miner.body.velocity.y = speed;
-    // this.miner.y += speed;
-    this.miner.animations.play('walk-down');
-    this.direction = Directions.DOWN;
-  } else {
-    if(!this.game.input.keyboard.isDown(Phaser.KeyCode.SPACEBAR)) {
-      this.miner.animations.stop();
-      this.miner.body.velocity.x = 0;
-      this.miner.body.velocity.y = 0;
-    }
-  }
-
-  if(this.game.input.keyboard.isDown(Phaser.KeyCode.SPACEBAR)) {
-    this.miner.body.velocity.x = 0;
-    this.miner.body.velocity.y = 0;
-    this.minerAttacking = true;
-    attack(this.miner, this.direction);
-  } else {
-    this.minerAttacking = false;
-  }
+  this.miner.update();
 }
 
 function attack(miner, direction) {
