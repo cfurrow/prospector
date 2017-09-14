@@ -35,11 +35,14 @@ function create() {
   this.layer.setScale(3);
   this.layer.resizeWorld();
 
-  this.squirrel = this.game.add.sprite(100,100, 'squirrel', 1);
-  this.squirrel.scale.set(2);
-  this.squirrel.smoothed = false;
-  this.squirrel.animations.add('run', [0,1,2,3,4,5,6,7], 10, true);
-  this.squirrel.animations.play('run');
+  for(var i=0; i < 500; i++) {
+    var squirrel = this.game.add.sprite(this.game.rnd.between(0,2000),this.game.rnd.between(0,2000), 'squirrel', 1);
+    squirrel.scale.set(2);
+    squirrel.smoothed = false;
+    squirrel.animations.add('run', [0,1,2,3,4,5,6,7], 10, true);
+    squirrel.animations.play('run');
+  }
+
 
   this.miner = this.game.add.sprite(150, 150, 'miner', 2);
   this.miner.anchor.set(0.5, 0.5);
