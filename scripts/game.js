@@ -9,6 +9,7 @@ function preload() {
   this.game.load.tilemap('cave', 'assets/levels/cave.json', null, Phaser.Tilemap.TILED_JSON);
   this.game.load.image('cave', 'assets/levels/cave.png');
   this.game.load.image('grass', 'assets/levels/grass.png');
+  this.game.load.image('grass2', 'assets/levels/grass2.png');
 }
 
 var Directions = {
@@ -28,6 +29,8 @@ function create() {
   this.map = game.add.tilemap('cave');
   this.map.addTilesetImage('cave3', 'cave');
   this.map.addTilesetImage('overworld', 'grass');
+  this.map.addTilesetImage('grass2.png');
+  this.map.addTilesetImage('infusionsoft.png', 'confusion');
   this.layer = this.map.createLayer('Overworld');
   this.layer.scale.set(3);
   this.layer.resizeWorld();
