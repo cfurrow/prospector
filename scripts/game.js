@@ -1,9 +1,7 @@
 function preload() {
   Miner.preload(this.game);
+  Squirrel.preload(this.game);
   this.game.load.spritesheet('blood', 'assets/blood.png', 32, 32, -1, 32, 32);
-
-  this.game.load.spritesheet('squirrel', 'assets/Monster-squirrel.png', 32, 32, -1);
-  this.game.load.spritesheet('squirrel-run', 'assets/squirrel-run.png', 32, 32, -1);
 
   this.game.load.image('confusion', 'assets/infusionsoft.png', 300, 300);
 
@@ -15,6 +13,7 @@ function preload() {
 
 function create() {
   this.game.physics.startSystem(Phaser.Physics.ARCADE);
+
   this.miner = new Miner(game, 150, 150);
   this.miner.create();
 
@@ -26,13 +25,7 @@ function create() {
   this.layer.resizeWorld();
 
   for(var i=0; i < 500; i++) {
-    var squirrel = this.game.add.sprite(this.game.rnd.between(0,2000),this.game.rnd.between(0,2000), 'squirrel', 1);
-    squirrel.scale.set(2);
-    squirrel.smoothed = false;
-    squirrel.animations.add('idle', [0,1,2,3,4,5,6,7], 10, true);
-
-    squirrel.animations.add('run', [32,33,34], 10, true);
-    squirrel.animations.play('run');
+    Squirrel.createAtRandom(this.game);
   }
 
   this.mine = this.game.add.sprite(500, 400, 'mine', 0);
@@ -56,7 +49,7 @@ function create() {
   // var confusionTween = this.game.add.tween(this.confusion);
   // confusionTween.to({x: 750}, 5500, Phaser.Easing.Elastic.InOut, true, 0, -1, true);
 
-  this.game.physics.arcade.enable([this.miner, this.mine]);
+  this.game.physics.arcade.enable([this.mine]);
 
   this.miner.body.collideWorldBounds = true;
   this.miner.body.allowDrag = true;

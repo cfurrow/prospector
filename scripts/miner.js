@@ -96,7 +96,9 @@ Miner.preload = function(game) {
   game.load.spritesheet('mine', 'assets/gold-mine.png', 96, 96);
 };
 
-Miner.prototype.create = function(game) {
+Miner.prototype.create = function() {
+  this.game.physics.arcade.enable(this);
+
   this.animations.add('walk-up',          [0, 5, 10, 15, 20], 10, true);
   this.animations.add('walk-up-right',    [1, 6, 11, 16, 21], 10, true);
   this.animations.add('walk-right',       [2, 7, 12, 17, 22], 10, true);
