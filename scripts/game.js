@@ -14,7 +14,7 @@ function preload() {
 function create() {
   this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
-  this.miner = new Miner(game, 150, 150);
+  this.miner = new Miner(game, 150, 200);
   this.miner.create();
 
   this.map = game.add.tilemap('cave');
@@ -24,11 +24,13 @@ function create() {
   this.layer.setScale(3);
   this.layer.resizeWorld();
 
-  this.squirrels = game.add.group();
+  this.group = game.add.group();
+  this.group.addChild(this.miner);
 
   for(var i=0; i < 500; i++) {
-    this.squirrels.addChild(Squirrel.createAtRandom(this.game));
+    this.group.addChild(Squirrel.createAtRandom(this.game));
   }
+  this.group.sort();
 
   this.mine = this.game.add.sprite(500, 400, 'mine', 0);
   this.mine.anchor.set(0.5,0.5);
@@ -71,6 +73,7 @@ function mineSomeGold() {
 
 function enterGoldMine() {
   this.mine.kill();
+  //this.group.kill();
   this.miner.position.set(550, 200);
   this.layer.destroy();
   this.layer = this.map.createLayer('Gold Mine');
@@ -78,7 +81,6 @@ function enterGoldMine() {
   this.layer.setScale(3);
   this.layer.sendToBack();
   this.layer.resizeWorld();
-
 }
 
 function exitGoldMine() {
@@ -107,10 +109,11 @@ function update() {
 
   this.game.physics.arcade.collide(this.miner, this.mine, mineSomeGold, null, this);
   this.game.physics.arcade.collide(this.miner, this.layer);
-  //this.game.physics.arcade.collide(this.axHitbox, this.confusion, attackConfusion, null, this);
 
   this.miner.update();
-  this.squirrels.forEachAlive(function(s){ s.update(); });
+
+  this.group.forEachAlive(function(s){ s.update(); });
+  this.group.sort('y', Phaser.Group.SORT_ASCENDING);
 }
 
 function attack(miner, direction) {

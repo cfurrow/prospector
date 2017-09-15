@@ -1,7 +1,7 @@
 Miner = function(game, x, y) {
   Phaser.Sprite.call(this,game, x, y, 'miner');
   this.scale.set(3,3);
-  this.anchor.set(0.5, 0.5);
+  this.anchor.set(0.5, 0.8);
   this.smoothed = false;
 
   game.add.existing(this);

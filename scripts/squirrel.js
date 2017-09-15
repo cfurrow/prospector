@@ -1,7 +1,7 @@
 Squirrel = function(game, x, y) {
   Phaser.Sprite.call(this,game, x, y, 'squirrel');
   this.scale.set(2,2);
-  this.anchor.set(0.5, 0.5);
+  this.anchor.set(0.5, 1);
   this.smoothed = false;
 
   this.animations.add('idle', [0,1,2,3,4,5,6,7], 10, true);
