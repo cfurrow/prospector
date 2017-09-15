@@ -35,7 +35,7 @@ Squirrel.prototype.update = function(){
   var i = this.game.rnd.integerInRange(0,100);
   var now = this.game.time.now;
   var lastChangeDiff = now - this.lastChange;
-  if(lastChangeDiff > 1000) {
+  if(lastChangeDiff > this.game.rnd.between(300,1200)) {
     this.lastChange = this.game.time.now;
     if(i < 33) {
       this.movingRight = true;
