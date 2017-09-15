@@ -37,20 +37,27 @@ Squirrel.prototype.update = function(){
   var lastChangeDiff = now - this.lastChange;
   if(lastChangeDiff > 1000) {
     this.lastChange = this.game.time.now;
-    if(i > 50) {
+    if(i < 33) {
       this.movingRight = true;
       this.movingLeft = false;
-    } else {
+    } else if (i < 66) {
       this.movingRight = false;
       this.movingLeft = true;
+    } else {
+      this.movingRight = false;
+      this.movingLeft = false;
     }
   }
 
   if(this.movingRight) {
     this.position.x += speed;
     this.scale.x = Math.abs(this.scale.x);
+    this.animations.play('run');
   }else if(this.movingLeft) {
     this.scale.x = -Math.abs(this.scale.x);
     this.position.x -= speed;
+    this.animations.play('run');
+  } else {
+    this.animations.play('idle');
   }
 };
