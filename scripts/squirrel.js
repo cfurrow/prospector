@@ -5,8 +5,12 @@ Squirrel = function(game, x, y) {
   this.smoothed = false;
 
   this.animations.add('idle', [0,1,2,3,4,5,6,7], 10, true);
-  this.animations.add('run', [32,33,34], 10, true);
+  this.animations.add('run', [32,33,34], 7, true);
   this.animations.play('run');
+
+  this.lastChange = 0;
+  game.physics.arcade.enable(this);
+  this.collideWorldBounds = true;
 };
 
 Squirrel.prototype = Object.create(Phaser.Sprite.prototype);
@@ -23,4 +27,30 @@ Squirrel.createAtRandom = function(game) {
   var squirrel = new Squirrel(game, x, y);
   game.add.existing(squirrel);
   return squirrel;
+};
+
+Squirrel.prototype.update = function(){
+  var speed = 4;
+
+  var i = this.game.rnd.integerInRange(0,100);
+  var now = this.game.time.now;
+  var lastChangeDiff = now - this.lastChange;
+  if(lastChangeDiff > 1000) {
+    this.lastChange = this.game.time.now;
+    if(i > 50) {
+      this.movingRight = true;
+      this.movingLeft = false;
+    } else {
+      this.movingRight = false;
+      this.movingLeft = true;
+    }
+  }
+
+  if(this.movingRight) {
+    this.position.x += speed;
+    this.scale.x = Math.abs(this.scale.x);
+  }else if(this.movingLeft) {
+    this.scale.x = -Math.abs(this.scale.x);
+    this.position.x -= speed;
+  }
 };

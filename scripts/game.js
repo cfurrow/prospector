@@ -24,8 +24,10 @@ function create() {
   this.layer.setScale(3);
   this.layer.resizeWorld();
 
+  this.squirrels = game.add.group();
+
   for(var i=0; i < 500; i++) {
-    Squirrel.createAtRandom(this.game);
+    this.squirrels.addChild(Squirrel.createAtRandom(this.game));
   }
 
   this.mine = this.game.add.sprite(500, 400, 'mine', 0);
@@ -108,6 +110,7 @@ function update() {
   //this.game.physics.arcade.collide(this.axHitbox, this.confusion, attackConfusion, null, this);
 
   this.miner.update();
+  this.squirrels.forEachAlive(function(s){ s.update(); });
 }
 
 function attack(miner, direction) {
