@@ -16,11 +16,12 @@ Miner.preload = function(game) {
   game.load.spritesheet('mine', 'assets/gold-mine.png', 96, 96);
 };
 
-Miner.directions = {
+Miner.actions = {
   UP:    1,
   RIGHT: 2,
   DOWN:  4,
   LEFT:  8,
+  ATTACK: 16
 };
 
 Miner.prototype.update = function(){
@@ -31,64 +32,67 @@ Miner.prototype.update = function(){
   // 2 => RIGHT
   // 4 => DOWN
   // 8 => LEFT
-  this.facing = 0; // nothing
+  this.currentAction = 0; // nothing
 
   if(this.game.input.keyboard.isDown(Phaser.KeyCode.UP)) {
     this.body.velocity.y = -speed;
-    this.facing |= Miner.directions.UP;
+    this.currentAction |= Miner.actions.UP;
   }
   if(this.game.input.keyboard.isDown(Phaser.KeyCode.DOWN)) {
     this.body.velocity.y = speed;
-    this.facing |= Miner.directions.DOWN;
+    this.currentAction |= Miner.actions.DOWN;
   }
   if(this.game.input.keyboard.isDown(Phaser.KeyCode.LEFT)) {
     this.body.velocity.x = -speed;
     this.scale.x = -Math.abs(this.scale.x);
-    this.facing |= Miner.directions.LEFT;
+    this.currentAction |= Miner.actions.LEFT;
   }
   if(this.game.input.keyboard.isDown(Phaser.KeyCode.RIGHT)) {
     this.body.velocity.x = speed;
     this.scale.x = Math.abs(this.scale.x);
-    this.facing |= Miner.directions.RIGHT;
+    this.currentAction |= Miner.actions.RIGHT;
   }
 
-  if(this.facing === 0) {
+  if(this.game.input.keyboard.isDown(Phaser.KeyCode.SPACEBAR)) {
+    this.currentAction |= Miner.actions.ATTACK;
+  }
+
+  if(this.currentAction === 0) {
     this.animations.stop();
     this.body.velocity.x = 0;
     this.body.velocity.y = 0;
-  }
-
-  this.play('walk');
-
-  if(this.game.input.keyboard.isDown(Phaser.KeyCode.SPACEBAR)) {
-    this.body.velocity.x = 0;
-    this.body.velocity.y = 0;
-    thisAttacking = true;
-    this.play('attack');
   } else {
-    thisAttacking = false;
+    this.animate();
   }
 };
 
-Miner.prototype.play = function(action) {
+Miner.prototype.animate = function() {
   var directionKey = [];
-  if(this.facing === 0) {
+  var animationKey = null;
+  var action = 'walk';
+
+  if(this.currentAction === 0) {
     return;
   }
 
-  if(this.facing & Miner.directions.UP) {
+  if(this.currentAction & Miner.actions.UP) {
     directionKey.push('up');
   }
-  if(this.facing & Miner.directions.DOWN) {
+  if(this.currentAction & Miner.actions.DOWN) {
     directionKey.push('down');
   }
-  if(this.facing & Miner.directions.RIGHT || this.facing & Miner.directions.LEFT) {
+  if(this.currentAction & Miner.actions.RIGHT || this.currentAction & Miner.actions.LEFT) {
     directionKey.push('right');
   }
 
-  directionKey = directionKey.join('-');
+  if(this.currentAction & Miner.actions.ATTACK) {
+    action = 'attack';
+  }
 
-  this.animations.play(action + '-' + directionKey);
+  directionKey = directionKey.join('-');
+  animationKey = action + '-' + directionKey;
+  console.log(animationKey);
+  this.animations.play(animationKey);
 };
 
 Miner.prototype.create = function() {

@@ -116,41 +116,6 @@ function update() {
   this.group.sort('y', Phaser.Group.SORT_ASCENDING);
 }
 
-function attack(miner, direction) {
-  var animation = null;
-  switch(direction) {
-    case Directions.UP:
-      animation = 'swing-up';
-      break;
-    case Directions.UP_RIGHT:
-      animation = 'swing-up-right';
-      break;
-    case Directions.RIGHT:
-      animation = 'swing-right';
-      break;
-    case Directions.DOWN_RIGHT:
-      animation = 'swing-down-right';
-      break;
-    case Directions.DOWN:
-      animation = 'swing-down';
-      break;
-    case Directions.DOWN_LEFT:
-      animation = 'swing-down-right';
-      break;
-    case Directions.LEFT:
-      animation = 'swing-right';
-      break;
-    case Directions.UP_LEFT:
-      animation = 'swing-up-right';
-      break;
-    default:
-      animation = 'swing-right';
-      break;
-  }
-
-  miner.animations.play(animation);
-}
-
 function render () {
   //this.game.debug.body(this.miner);
   // this.game.debug.body(this.mine);
