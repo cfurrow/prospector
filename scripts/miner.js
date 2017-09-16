@@ -84,7 +84,7 @@ Miner.prototype.update = function(){
     this.body.velocity.x = 0;
     this.body.velocity.y = 0;
     thisAttacking = true;
-    attack(this, this.direction);
+    this.attack();
   } else {
     thisAttacking = false;
   }
@@ -117,4 +117,38 @@ Miner.prototype.create = function() {
   this.axHitbox = hitboxes.create(20,-10,null);
   this.axHitbox.anchor.set(0.5,0.5);
   this.axHitbox.body.setSize(50,50,0,0);
+};
+
+Miner.prototype.attack = function() {
+  var animation = null;
+  switch(this.direction) {
+    case Miner.directions.UP:
+      animation = 'swing-up';
+      break;
+    case Miner.directions.UP_RIGHT:
+      animation = 'swing-up-right';
+      break;
+    case Miner.directions.RIGHT:
+      animation = 'swing-right';
+      break;
+    case Miner.directions.DOWN_RIGHT:
+      animation = 'swing-down-right';
+      break;
+    case Miner.directions.DOWN:
+      animation = 'swing-down';
+      break;
+    case Miner.directions.DOWN_LEFT:
+      animation = 'swing-down-right';
+      break;
+    case Miner.directions.LEFT:
+      animation = 'swing-right';
+      break;
+    case Miner.directions.UP_LEFT:
+      animation = 'swing-up-right';
+      break;
+    default:
+      animation = 'swing-right';
+      break;
+  }
+  this.animations.play(animation);
 };
