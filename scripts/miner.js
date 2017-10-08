@@ -19,19 +19,6 @@ Miner.prototype.constructor = Miner;
 Miner.preload = function(game) {
   game.load.spritesheet('miner', 'assets/miner.png', 72, 72, 65, 0);
   game.load.spritesheet('miner-with-gold', 'assets/miner-with-gold.png', 72, 72);
-  game.load.spritesheet('mine', 'assets/gold-mine.png', 96, 96);
-};
-
-Miner.facing = {
-  UP:    1,
-  RIGHT: 2,
-  DOWN:  4,
-  LEFT:  8,
-
-};
-Miner.action = {
-  WALK: 1,
-  ATTACK: 2
 };
 
 Miner.prototype.update = function() {
