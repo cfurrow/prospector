@@ -15,7 +15,6 @@ export default class extends Phaser.State {
     //
     // load your assets
     //
-    //this.load.image('mushroom', 'assets/images/mushroom2.png')
     Miner.preload(this.game);
     Squirrel.preload(this.game);
     this.game.load.spritesheet('blood', 'assets/blood.png', 32, 32, -1, 32, 32);

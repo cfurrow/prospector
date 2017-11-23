@@ -10808,7 +10808,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__states_Boot__ = __webpack_require__(/*! ./states/Boot */ 338);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__states_Splash__ = __webpack_require__(/*! ./states/Splash */ 339);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__states_Game__ = __webpack_require__(/*! ./states/Game */ 341);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__config__ = __webpack_require__(/*! ./config */ 343);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__config__ = __webpack_require__(/*! ./config */ 344);
 
 
 
@@ -10905,7 +10905,6 @@ if (window.cordova) {
     // this.load.image('loaderBg', './assets/images/loader-bg.png')
     //
     // this.load.image('loaderBar', './assets/images/loader-bar.png')
-
   }
 
   render() {
@@ -10951,7 +10950,6 @@ if (window.cordova) {
     //
     // load your assets
     //
-    //this.load.image('mushroom', 'assets/images/mushroom2.png')
     __WEBPACK_IMPORTED_MODULE_2__sprites_Miner__["a" /* default */].preload(this.game);
     __WEBPACK_IMPORTED_MODULE_3__sprites_Squirrel__["a" /* default */].preload(this.game);
     this.game.load.spritesheet('blood', 'assets/blood.png', 32, 32, -1, 32, 32);
@@ -11002,7 +11000,9 @@ const centerGameObjects = objects => {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sprites_Miner__ = __webpack_require__(/*! ../sprites/Miner */ 128);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__sprites_Squirrel__ = __webpack_require__(/*! ../sprites/Squirrel */ 129);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__sprites_Blood__ = __webpack_require__(/*! ../sprites/Blood */ 342);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__sprites_MineEntrance__ = __webpack_require__(/*! ../sprites/MineEntrance */ 343);
 /* globals __DEV__ */
+
 
 
 
@@ -11033,10 +11033,8 @@ const centerGameObjects = objects => {
     }
     this.group.sort();
 
-    this.mine = this.game.add.sprite(500, 400, 'mine', 0);
-    this.mine.anchor.set(0.5, 0.5);
-    this.mine.scale.set(2, 2);
-    this.mine.smoothed = false;
+    this.mine = new __WEBPACK_IMPORTED_MODULE_4__sprites_MineEntrance__["a" /* default */](game, 400, 300);
+    game.add.existing(this.mine);
 
     this.blood = new __WEBPACK_IMPORTED_MODULE_3__sprites_Blood__["a" /* default */](game, 1, 1);
 
@@ -11151,6 +11149,28 @@ class Blood extends Phaser.Sprite {
 
 /***/ }),
 /* 343 */
+/*!*************************************!*\
+  !*** ./src/sprites/MineEntrance.js ***!
+  \*************************************/
+/*! exports provided: default */
+/*! exports used: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+class MineEntrance extends Phaser.Sprite {
+  constructor(game, x, y) {
+    super(game, x, y, 'mine');
+
+    this.anchor.set(0.5, 0.5);
+    this.scale.set(2, 2);
+    this.smoothed = false;
+  }
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = MineEntrance;
+
+
+/***/ }),
+/* 344 */
 /*!***********************!*\
   !*** ./src/config.js ***!
   \***********************/

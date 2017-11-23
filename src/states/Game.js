@@ -3,6 +3,7 @@ import Phaser from 'phaser'
 import Miner from '../sprites/Miner'
 import Squirrel from '../sprites/Squirrel'
 import Blood from '../sprites/Blood'
+import MineEntrance from '../sprites/MineEntrance'
 
 export default class extends Phaser.State {
   init() {}
@@ -29,10 +30,8 @@ export default class extends Phaser.State {
     }
     this.group.sort();
 
-    this.mine = this.game.add.sprite(500, 400, 'mine', 0);
-    this.mine.anchor.set(0.5,0.5);
-    this.mine.scale.set(2,2);
-    this.mine.smoothed = false;
+    this.mine = new MineEntrance(game, 400,300);
+    game.add.existing(this.mine);
 
     this.blood = new Blood(game, 1, 1)
 
