@@ -21,9 +21,112 @@
          "width":30,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"Overworld Objects",
+         "objects":[
+                {
+                 "height":16.0522,
+                 "id":20,
+                 "name":"Start",
+                 "rotation":0,
+                 "type":"MinerStart",
+                 "visible":true,
+                 "width":17.0878,
+                 "x":41.7992,
+                 "y":55.405
+                }, 
+                {
+                 "gid":337,
+                 "height":48,
+                 "id":22,
+                 "name":"Go into mine",
+                 "properties":
+                    {
+                     "LayerName":"Gold Mine",
+                     "SpriteKey":"mine"
+                    },
+                 "propertytypes":
+                    {
+                     "LayerName":"string",
+                     "SpriteKey":"string"
+                    },
+                 "rotation":0,
+                 "type":"MineEntrance",
+                 "visible":true,
+                 "width":48,
+                 "x":111.149,
+                 "y":72.0905
+                }],
+         "offsetx":5.68434e-14,
+         "offsety":1.61952,
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":false,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"Gold Mine Objects",
+         "objects":[
+                {
+                 "height":16.0522,
+                 "id":23,
+                 "name":"Start",
+                 "properties":
+                    {
+                     "LayerName":"Overworld"
+                    },
+                 "propertytypes":
+                    {
+                     "LayerName":"string"
+                    },
+                 "rotation":0,
+                 "type":"MinerStart",
+                 "visible":true,
+                 "width":17.0878,
+                 "x":174.877,
+                 "y":128.417
+                }, 
+                {
+                 "height":18.1234,
+                 "id":25,
+                 "name":"Mine Exit",
+                 "properties":
+                    {
+                     "LayerName":"Overworld"
+                    },
+                 "propertytypes":
+                    {
+                     "LayerName":"string"
+                    },
+                 "rotation":0,
+                 "type":"MineEntrance",
+                 "visible":true,
+                 "width":34.1756,
+                 "x":169.325,
+                 "y":24.855
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextobjectid":15,
+ "nextobjectid":27,
  "orientation":"orthogonal",
+ "properties":
+    {
+     "TilesetCacheKey":"cave",
+     "TilesetName":"cave"
+    },
+ "propertytypes":
+    {
+     "TilesetCacheKey":"string",
+     "TilesetName":"string"
+    },
  "renderorder":"right-down",
  "tiledversion":"1.0.3",
  "tileheight":16,
@@ -31,15 +134,34 @@
         {
          "columns":16,
          "firstgid":1,
+         "grid":
+            {
+             "height":21,
+             "orientation":"orthogonal",
+             "width":16
+            },
          "image":"cave.png",
          "imageheight":336,
          "imagewidth":256,
          "margin":0,
-         "name":"cave3",
+         "name":"cave",
          "spacing":0,
          "tilecount":336,
          "tileheight":16,
          "tilewidth":16
+        }, 
+        {
+         "columns":1,
+         "firstgid":337,
+         "image":"..\/gold-mine.png",
+         "imageheight":192,
+         "imagewidth":96,
+         "margin":0,
+         "name":"mine",
+         "spacing":0,
+         "tilecount":2,
+         "tileheight":96,
+         "tilewidth":96
         }],
  "tilewidth":16,
  "type":"map",

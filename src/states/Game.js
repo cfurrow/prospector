@@ -4,34 +4,33 @@ import Miner from '../sprites/Miner'
 import Squirrel from '../sprites/Squirrel'
 import Blood from '../sprites/Blood'
 import MineEntrance from '../sprites/MineEntrance'
+import LevelLoader from '../LevelLoader'
 
 export default class extends Phaser.State {
   init() {}
   preload() {}
 
   create() {
-    this.game.physics.startSystem(Phaser.Physics.ARCADE);
+    game.physics.startSystem(Phaser.Physics.ARCADE);
 
-    this.miner = new Miner(game, 150, 200);
+    this.miner = new Miner(game, 0,0);
     this.miner.create();
 
-    this.map = game.add.tilemap('cave');
-    this.map.addTilesetImage('cave3', 'cave');
+    this.loader = new LevelLoader(game);
+    this.loader.onLayerLoaded.add(() => {
+      this.miner.position.set(this.loader.playerStart.x, this.loader.playerStart.y)
+    })
+    this.map = this.loader.loadMap('cave')
+    this.loader.loadLayer('Overworld');
 
-    this.layer = this.map.createLayer('Overworld');
-    this.layer.setScale(3);
-    this.layer.resizeWorld();
 
     this.group = game.add.group();
     this.group.addChild(this.miner);
 
-    for(var i=0; i < 500; i++) {
-      this.group.addChild(Squirrel.createAtRandom(this.game));
-    }
+    // for(var i=0; i < 500; i++) {
+    //   this.group.addChild(Squirrel.createAtRandom(this.game));
+    // }
     this.group.sort();
-
-    this.mine = new MineEntrance(game, 400,300);
-    game.add.existing(this.mine);
 
     this.blood = new Blood(game, 1, 1)
 
@@ -43,26 +42,19 @@ export default class extends Phaser.State {
     // var confusionTween = this.game.add.tween(this.confusion);
     // confusionTween.to({x: 750}, 5500, Phaser.Easing.Elastic.InOut, true, 0, -1, true);
 
-    this.game.physics.arcade.enable([this.mine]);
-
-    this.miner.body.collideWorldBounds = true;
-    this.miner.body.allowDrag = true;
-    this.miner.body.setSize(72 / this.miner.scale.x, 72 / this.miner.scale.y, 72 / this.miner.scale.x, 72 / this.miner.scale.y);
-
-    this.mine.body.immovable = true;
-    this.mine.body.setSize(40, 40, 16, 48);
+    this.loader.setupPhysics();
+    this.miner.setupPhysics();
 
     this.game.camera.follow(this.miner);
-    this.exitGoldMine.call(this);
   }
 
   mineSomeGold() {
-    this.mine.frame = 1;
+    //this.mine.frame = 1;
     this.enterGoldMine.call(this);
   }
 
   enterGoldMine() {
-    this.mine.kill();
+    //this.mine.kill();
     //this.group.kill();
     this.miner.position.set(550, 200);
     this.layer.destroy();
@@ -71,14 +63,6 @@ export default class extends Phaser.State {
     this.layer.setScale(3);
     this.layer.sendToBack();
     this.layer.resizeWorld();
-  }
-
-  exitGoldMine() {
-    //this.mine bring back to life
-    this.layer.destroy();
-    this.layer = this.map.createLayer('Overworld');
-    this.layer.scale.set(3);
-    this.layer.sendToBack();
   }
 
   attackConfusion() {
@@ -93,11 +77,15 @@ export default class extends Phaser.State {
     }
   }
 
+  doCollision(a, b) {
+    b.collideWith(a);
+  }
+
   update() {
     var speed = 200;
     //this.mine.frame = 0; // reset to "off"
 
-    this.game.physics.arcade.collide(this.miner, this.mine, this.mineSomeGold, null, this);
+    this.game.physics.arcade.collide(this.miner, this.loader.collidables, this.doCollision, null, this);
     this.game.physics.arcade.collide(this.miner, this.layer);
 
     this.miner.update();
@@ -107,8 +95,14 @@ export default class extends Phaser.State {
   }
 
   render () {
-    //this.game.debug.body(this.miner);
-    // this.game.debug.body(this.mine);
+    // this.game.debug.body(this.miner);
+    // this.game.debug.spriteBounds(this.miner, 'pink', false);
+    // this.collidables.forEach( (c) => {
+    //   this.game.debug.body(c);
+    //   this.game.debug.spriteBounds(c, 'pink', false);
+    // } )
+
+    //this.game.debug.body(this.mine);
     //this.game.debug.body(this.axHitbox);
     //this.layer.debug = true;
   }

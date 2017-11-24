@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="16" tileheight="16" nextobjectid="15">
- <tileset firstgid="1" name="cave3" tilewidth="16" tileheight="16" tilecount="336" columns="16">
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="16" tileheight="16" nextobjectid="27">
+ <properties>
+  <property name="TilesetCacheKey" value="cave"/>
+  <property name="TilesetName" value="cave"/>
+ </properties>
+ <tileset firstgid="1" name="cave" tilewidth="16" tileheight="16" tilecount="336" columns="16">
+  <grid orientation="orthogonal" width="16" height="21"/>
   <image source="cave.png" width="256" height="336"/>
+ </tileset>
+ <tileset firstgid="337" name="mine" tilewidth="96" tileheight="96" tilecount="2" columns="1">
+  <image source="../gold-mine.png" width="96" height="192"/>
  </tileset>
  <layer name="Gold Mine" width="30" height="30">
   <data encoding="csv">
@@ -71,4 +79,25 @@
 162,161,162,145,115,162,162,162,161,161,145,146,146,146,146,161,162,161,145,162,162,161,145,145,146,161,161,145,146,162
 </data>
  </layer>
+ <objectgroup name="Overworld Objects" visible="0" offsetx="5.68434e-14" offsety="1.61952">
+  <object id="20" name="Start" type="MinerStart" x="41.7992" y="55.405" width="17.0878" height="16.0522"/>
+  <object id="22" name="Go into mine" type="MineEntrance" gid="337" x="111.149" y="72.0905" width="48" height="48">
+   <properties>
+    <property name="LayerName" value="Gold Mine"/>
+    <property name="SpriteKey" value="mine"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="Gold Mine Objects">
+  <object id="23" name="Start" type="MinerStart" x="174.877" y="128.417" width="17.0878" height="16.0522">
+   <properties>
+    <property name="LayerName" value="Overworld"/>
+   </properties>
+  </object>
+  <object id="25" name="Mine Exit" type="MineEntrance" x="169.325" y="24.855" width="34.1756" height="18.1234">
+   <properties>
+    <property name="LayerName" value="Overworld"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>

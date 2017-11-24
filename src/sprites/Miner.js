@@ -17,7 +17,6 @@ export default class Miner extends Phaser.Sprite {
   static preload(game) {
     game.load.spritesheet('miner', 'assets/miner.png', 72, 72, 65, 0);
     game.load.spritesheet('miner-with-gold', 'assets/miner-with-gold.png', 72, 72);
-    game.load.spritesheet('mine', 'assets/gold-mine.png', 96, 96);
   }
 
   static get facing() {
@@ -143,5 +142,11 @@ export default class Miner extends Phaser.Sprite {
     this.axHitbox = hitboxes.create(20,-10,null);
     this.axHitbox.anchor.set(0.5,0.5);
     this.axHitbox.body.setSize(50,50,0,0);
+  }
+
+  setupPhysics() {
+    this.body.collideWorldBounds = true;
+    this.body.allowDrag = true;
+    this.body.setSize(72 / this.scale.x, 72 / this.scale.y, 72 / this.scale.x, 72 / this.scale.y);
   }
 }
