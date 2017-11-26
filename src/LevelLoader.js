@@ -83,28 +83,36 @@ export default class LevelLoader {
     let layerObjects = map.objects[layerName + ' Objects'];
     let mapObjInstance = null;
     let centerX, centerY;
+    let properties = {};
 
     layerObjects.forEach( (obj, index, array) => {
       centerX = obj.x
       centerY = obj.y
-      
+
+      properties = obj.properties || {}
+
       // TODO: get center of obj for placement.
       console.log(obj.type, obj)
       if(obj.width && obj.height) {
         centerX = obj.x + (obj.width / 2)
         centerY = obj.y + (obj.height / 2)
       }
+      properties.centerX = centerX;
+      properties.centerY = centerY;
+      properties.width = obj.width
+      properties.height = obj.height
+
 
       if(obj.type === 'MinerStart') {
         this.playerStart.set(centerX*SCALE, centerY*SCALE);
         return;
       } else if (obj.type === 'MineEntrance') {
-        mapObjInstance = new MineEntrance(game, centerX*SCALE, centerY*SCALE, obj.properties);
+        mapObjInstance = new MineEntrance(game, centerX*SCALE, centerY*SCALE, properties);
         mapObjInstance.onTransition.add((newLayerName) => {
           this.loadLayer(newLayerName)
         })
       } else {
-        mapObjInstance = new LevelLoader.ObjMapper[obj.type](game, centerX*SCALE, centerY*SCALE, obj.properties);
+        mapObjInstance = new LevelLoader.ObjMapper[obj.type](game, centerX*SCALE, centerY*SCALE, properties);
       }
 
       if(mapObjInstance.isCollidable) {
