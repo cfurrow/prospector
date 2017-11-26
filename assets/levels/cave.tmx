@@ -89,7 +89,7 @@
   </object>
  </objectgroup>
  <objectgroup name="Gold Mine Objects">
-  <object id="23" name="Start" type="MinerStart" x="174.877" y="128.417" width="17.0878" height="16.0522">
+  <object id="23" name="Start" type="MinerStart" x="178.502" y="87.5098" width="17.0878" height="16.0522">
    <properties>
     <property name="LayerName" value="Overworld"/>
    </properties>
