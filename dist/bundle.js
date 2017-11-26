@@ -3130,6 +3130,11 @@ class MineEntrance extends Phaser.Sprite {
   constructor(game, x, y, properties) {
     let spriteKey = properties.SpriteKey;
     super(game, x, y, spriteKey);
+    if (!spriteKey) {
+      this.width = properties.width;
+      this.height = properties.height;
+      console.log("MineEntrance", { width: this.width, height: this.height });
+    }
     //console.log(properties)
 
     this.anchor.set(0.5, 0.5);
@@ -3151,14 +3156,11 @@ class MineEntrance extends Phaser.Sprite {
 
   collideWith(obj) {
     console.log("Transition to ", this.properties.LayerName);
-    // load new layer????
-    // load new map???
     this.onTransition.dispatch(this.properties.LayerName);
   }
 
   setupPhysics() {
     this.body.immovable = true;
-    //this.body.setSize(this.width-8, this.height-8, this.width/3, this.height);
   }
 
   static preload(game) {
@@ -4287,6 +4289,14 @@ module.exports = Math.scale || function scale(x, inLow, inHigh, outLow, outHigh)
 
 "use strict";
 class Miner extends Phaser.Sprite {
+  static get width() {
+    return 72;
+  }
+
+  static get height() {
+    return 72;
+  }
+
   constructor(game, x, y) {
     super(game, x, y, 'miner');
     this.scale.set(3, 3);
@@ -4298,13 +4308,13 @@ class Miner extends Phaser.Sprite {
 
     this.xWalkFrame = null;
     this.yWalkFrame = null;
-
-    game.add.existing(this);
   }
 
   static preload(game) {
-    game.load.spritesheet('miner', 'assets/miner.png', 72, 72, 65, 0);
-    game.load.spritesheet('miner-with-gold', 'assets/miner-with-gold.png', 72, 72);
+    // spritesheet(key, url, frameWidth, frameHeight [, frameMax] [, margin] [, spacing] [, skipFrames]) 
+    //game.load.spritesheet('miner', 'assets/miner.png', Miner.width, Miner.height, 65, 0);
+    game.load.spritesheet('miner', 'assets/miner.png', Miner.width, Miner.height);
+    game.load.spritesheet('miner-with-gold', 'assets/miner-with-gold.png', Miner.width, Miner.height);
   }
 
   static get facing() {
@@ -4424,6 +4434,7 @@ class Miner extends Phaser.Sprite {
     var hitboxes = this.game.add.group();
     hitboxes.enableBody = true;
     this.addChild(hitboxes);
+
     this.axHitbox = hitboxes.create(20, -10, null);
     this.axHitbox.anchor.set(0.5, 0.5);
     this.axHitbox.body.setSize(50, 50, 0, 0);
@@ -4432,7 +4443,7 @@ class Miner extends Phaser.Sprite {
   setupPhysics() {
     this.body.collideWorldBounds = true;
     this.body.allowDrag = true;
-    this.body.setSize(72 / this.scale.x, 72 / this.scale.y, 72 / this.scale.x, 72 / this.scale.y);
+    this.body.setSize(Miner.width / this.scale.x, Miner.height / this.scale.y, Miner.width / this.scale.x, Miner.height / this.scale.y);
   }
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = Miner;
@@ -11162,7 +11173,7 @@ const centerGameObjects = objects => {
   render() {
     // this.game.debug.body(this.miner);
     // this.game.debug.spriteBounds(this.miner, 'pink', false);
-    // this.collidables.forEach( (c) => {
+    // this.loader.collidables.forEach( (c) => {
     //   this.game.debug.body(c);
     //   this.game.debug.spriteBounds(c, 'pink', false);
     // } )
@@ -11271,7 +11282,6 @@ class LevelLoader {
     let map = this.map;
     const game = this.game;
 
-    // TODO: destroy current layer objects
     if (this.layer) {
       this.layer.destroy();
     }
@@ -11298,21 +11308,36 @@ class LevelLoader {
     const game = this.game;
     let layerObjects = map.objects[layerName + ' Objects'];
     let mapObjInstance = null;
+    let centerX, centerY;
+    let properties = {};
 
     layerObjects.forEach((obj, index, array) => {
+      centerX = obj.x;
+      centerY = obj.y;
 
+      properties = obj.properties || {};
+
+      // TODO: get center of obj for placement.
       console.log(obj.type, obj);
+      if (obj.width && obj.height) {
+        centerX = obj.x + obj.width / 2;
+        centerY = obj.y + obj.height / 2;
+      }
+      properties.centerX = centerX;
+      properties.centerY = centerY;
+      properties.width = obj.width;
+      properties.height = obj.height;
 
       if (obj.type === 'MinerStart') {
-        this.playerStart.set(obj.x * SCALE, obj.y * SCALE);
+        this.playerStart.set(centerX * SCALE, centerY * SCALE);
         return;
       } else if (obj.type === 'MineEntrance') {
-        mapObjInstance = new __WEBPACK_IMPORTED_MODULE_0__sprites_MineEntrance__["a" /* default */](game, obj.x * SCALE, obj.y * SCALE, obj.properties);
+        mapObjInstance = new __WEBPACK_IMPORTED_MODULE_0__sprites_MineEntrance__["a" /* default */](game, centerX * SCALE, centerY * SCALE, properties);
         mapObjInstance.onTransition.add(newLayerName => {
           this.loadLayer(newLayerName);
         });
       } else {
-        mapObjInstance = new LevelLoader.ObjMapper[obj.type](game, obj.x * SCALE, obj.y * SCALE, obj.properties);
+        mapObjInstance = new LevelLoader.ObjMapper[obj.type](game, centerX * SCALE, centerY * SCALE, properties);
       }
 
       if (mapObjInstance.isCollidable) {
