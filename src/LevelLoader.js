@@ -56,7 +56,6 @@ export default class LevelLoader {
     let map = this.map;
     const game = this.game;
 
-    // TODO: destroy current layer objects
     if(this.layer) {
       this.layer.destroy();
     }
@@ -83,21 +82,29 @@ export default class LevelLoader {
     const game = this.game;
     let layerObjects = map.objects[layerName + ' Objects'];
     let mapObjInstance = null;
+    let centerX, centerY;
 
     layerObjects.forEach( (obj, index, array) => {
-
+      centerX = obj.x
+      centerY = obj.y
+      
+      // TODO: get center of obj for placement.
       console.log(obj.type, obj)
+      if(obj.width && obj.height) {
+        centerX = obj.x + (obj.width / 2)
+        centerY = obj.y + (obj.height / 2)
+      }
 
       if(obj.type === 'MinerStart') {
-        this.playerStart.set(obj.x*SCALE, obj.y*SCALE);
+        this.playerStart.set(centerX*SCALE, centerY*SCALE);
         return;
       } else if (obj.type === 'MineEntrance') {
-        mapObjInstance = new MineEntrance(game, obj.x*SCALE, obj.y*SCALE, obj.properties);
+        mapObjInstance = new MineEntrance(game, centerX*SCALE, centerY*SCALE, obj.properties);
         mapObjInstance.onTransition.add((newLayerName) => {
           this.loadLayer(newLayerName)
         })
       } else {
-        mapObjInstance = new LevelLoader.ObjMapper[obj.type](game, obj.x*SCALE, obj.y*SCALE, obj.properties);
+        mapObjInstance = new LevelLoader.ObjMapper[obj.type](game, centerX*SCALE, centerY*SCALE, obj.properties);
       }
 
       if(mapObjInstance.isCollidable) {
