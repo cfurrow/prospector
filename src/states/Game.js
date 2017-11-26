@@ -97,7 +97,7 @@ export default class extends Phaser.State {
   render () {
     // this.game.debug.body(this.miner);
     // this.game.debug.spriteBounds(this.miner, 'pink', false);
-    // this.collidables.forEach( (c) => {
+    // this.loader.collidables.forEach( (c) => {
     //   this.game.debug.body(c);
     //   this.game.debug.spriteBounds(c, 'pink', false);
     // } )
