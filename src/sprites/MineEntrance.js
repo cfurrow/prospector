@@ -2,6 +2,11 @@ export default class MineEntrance extends Phaser.Sprite {
   constructor(game, x, y, properties) {
     let spriteKey = properties.SpriteKey
     super(game, x, y, spriteKey)
+    if(!spriteKey) {
+      this.width = properties.width
+      this.height = properties.height
+      console.log("MineEntrance", {width: this.width, height: this.height})
+    }
     //console.log(properties)
 
     this.anchor.set(0.5, 0.5)
@@ -23,14 +28,11 @@ export default class MineEntrance extends Phaser.Sprite {
 
   collideWith(obj) {
     console.log("Transition to ", this.properties.LayerName)
-    // load new layer????
-    // load new map???
     this.onTransition.dispatch(this.properties.LayerName)
   }
 
   setupPhysics() {
     this.body.immovable = true;
-    //this.body.setSize(this.width-8, this.height-8, this.width/3, this.height);
   }
 
   static preload(game) {
