@@ -87,8 +87,8 @@
                  "type":"MinerStart",
                  "visible":true,
                  "width":17.0878,
-                 "x":178.501689312345,
-                 "y":87.509792046396
+                 "x":178.502,
+                 "y":87.5098
                 }, 
                 {
                  "height":18.1234,
@@ -105,9 +105,75 @@
                  "rotation":0,
                  "type":"MineEntrance",
                  "visible":true,
-                 "width":34.1756,
-                 "x":169.325,
+                 "width":50.7456082850042,
+                 "x":160.522183098592,
                  "y":24.855
+                }, 
+                {
+                 "height":193.14415907208,
+                 "id":28,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Blocker",
+                 "visible":true,
+                 "width":68.8690969345485,
+                 "x":209.196354598177,
+                 "y":-2.07125103562552
+                }, 
+                {
+                 "height":181.752278376139,
+                 "id":29,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Blocker",
+                 "visible":true,
+                 "width":21.2303231151616,
+                 "x":272.369511184756,
+                 "y":187.448218724109
+                }, 
+                {
+                 "height":78.7075393537697,
+                 "id":30,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Blocker",
+                 "visible":true,
+                 "width":83.8856669428335,
+                 "x":193.661971830986,
+                 "y":288.93951946976
+                }, 
+                {
+                 "height":28.4797017398508,
+                 "id":31,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Blocker",
+                 "visible":true,
+                 "width":207.125103562552,
+                 "x":-3.10687655343827,
+                 "y":338.649544324772
+                }, 
+                {
+                 "height":297.224523612262,
+                 "id":32,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Blocker",
+                 "visible":true,
+                 "width":20.1946975973488,
+                 "x":-3.10687655343828,
+                 "y":41.9428334714167
+                }, 
+                {
+                 "height":49.7100248550124,
+                 "id":34,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Blocker",
+                 "visible":true,
+                 "width":164.664457332229,
+                 "x":-1.03562551781276,
+                 "y":-3.62468931234466
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -115,7 +181,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":27,
+ "nextobjectid":37,
  "orientation":"orthogonal",
  "properties":
     {

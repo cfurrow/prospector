@@ -42,7 +42,7 @@ export default class extends Phaser.State {
     // var confusionTween = this.game.add.tween(this.confusion);
     // confusionTween.to({x: 750}, 5500, Phaser.Easing.Elastic.InOut, true, 0, -1, true);
 
-    this.loader.setupPhysics();
+    //this.loader.setupPhysics();
     this.miner.setupPhysics();
 
     this.game.camera.follow(this.miner);

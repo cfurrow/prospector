@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="16" tileheight="16" nextobjectid="27">
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="16" tileheight="16" nextobjectid="37">
  <properties>
   <property name="TilesetCacheKey" value="cave"/>
   <property name="TilesetName" value="cave"/>
@@ -94,10 +94,16 @@
     <property name="LayerName" value="Overworld"/>
    </properties>
   </object>
-  <object id="25" name="Mine Exit" type="MineEntrance" x="169.325" y="24.855" width="34.1756" height="18.1234">
+  <object id="25" name="Mine Exit" type="MineEntrance" x="160.522" y="24.855" width="50.7456" height="18.1234">
    <properties>
     <property name="LayerName" value="Overworld"/>
    </properties>
   </object>
+  <object id="28" type="Blocker" x="209.196" y="-2.07125" width="68.8691" height="193.144"/>
+  <object id="29" type="Blocker" x="272.37" y="187.448" width="21.2303" height="181.752"/>
+  <object id="30" type="Blocker" x="193.662" y="288.94" width="83.8857" height="78.7075"/>
+  <object id="31" type="Blocker" x="-3.10688" y="338.65" width="207.125" height="28.4797"/>
+  <object id="32" type="Blocker" x="-3.10688" y="41.9428" width="20.1947" height="297.225"/>
+  <object id="34" type="Blocker" x="-1.03563" y="-3.62469" width="164.664" height="49.71"/>
  </objectgroup>
 </map>

@@ -1,10 +1,12 @@
 import MineEntrance from './sprites/MineEntrance'
+import Blocker from './sprites/Blocker'
 
 export default class LevelLoader {
   static get ObjMapper()
   {
     return {
       'MineEntrance' : MineEntrance,
+      'Blocker': Blocker,
       'MinerStart' : (game, x, y) => { this.x = x; this.y = y;}
     }
   }
@@ -74,6 +76,8 @@ export default class LevelLoader {
 
     this.layer.sendToBack();
     this.onLayerLoaded.dispatch();
+
+    this.setupPhysics()
   }
 
   _loadLayerObjects(layerName) {
@@ -82,37 +86,31 @@ export default class LevelLoader {
     const game = this.game;
     let layerObjects = map.objects[layerName + ' Objects'];
     let mapObjInstance = null;
-    let centerX, centerY;
     let properties = {};
+    let x, y;
 
     layerObjects.forEach( (obj, index, array) => {
-      centerX = obj.x
-      centerY = obj.y
 
       properties = obj.properties || {}
 
       // TODO: get center of obj for placement.
       console.log(obj.type, obj)
-      if(obj.width && obj.height) {
-        centerX = obj.x + (obj.width / 2)
-        centerY = obj.y + (obj.height / 2)
-      }
-      properties.centerX = centerX;
-      properties.centerY = centerY;
-      properties.width = obj.width
-      properties.height = obj.height
-
+      
+      x = obj.x * SCALE
+      y = obj.y * SCALE
+      properties.width = obj.width * SCALE
+      properties.height = obj.height * SCALE
 
       if(obj.type === 'MinerStart') {
-        this.playerStart.set(centerX*SCALE, centerY*SCALE);
+        this.playerStart.set(x, y);
         return;
       } else if (obj.type === 'MineEntrance') {
-        mapObjInstance = new MineEntrance(game, centerX*SCALE, centerY*SCALE, properties);
+        mapObjInstance = new MineEntrance(game, x, y, properties);
         mapObjInstance.onTransition.add((newLayerName) => {
           this.loadLayer(newLayerName)
         })
       } else {
-        mapObjInstance = new LevelLoader.ObjMapper[obj.type](game, centerX*SCALE, centerY*SCALE, properties);
+        mapObjInstance = new LevelLoader.ObjMapper[obj.type](game, x, y, properties);
       }
 
       if(mapObjInstance.isCollidable) {

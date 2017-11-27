@@ -1,13 +1,25 @@
 export default class MineEntrance extends Phaser.Sprite {
   constructor(game, x, y, properties) {
     let spriteKey = properties.SpriteKey
+    
     super(game, x, y, spriteKey)
-    if(!spriteKey) {
-      this.width = properties.width
-      this.height = properties.height
-      console.log("MineEntrance", {width: this.width, height: this.height})
-    }
+    // if(!spriteKey) {
+    //   this.width = properties.width
+    //   this.height = properties.height
+    //   console.log("MineEntrance", {width: this.width, height: this.height})
+    // }
     //console.log(properties)
+    
+    let centerX, centerY
+    if(properties.width && properties.height) {
+      centerX = this.x + (properties.width / 2)
+      centerY = this.y + (properties.height / 2)
+    } else {
+      centerX = this.x
+      centerY = this.y
+    }
+    this.x = centerX
+    this.y = centerY
 
     this.anchor.set(0.5, 0.5)
     this.scale.set(2, 2)

@@ -3129,13 +3129,25 @@ exports[DATA_VIEW] = $DataView;
 class MineEntrance extends Phaser.Sprite {
   constructor(game, x, y, properties) {
     let spriteKey = properties.SpriteKey;
+
     super(game, x, y, spriteKey);
-    if (!spriteKey) {
-      this.width = properties.width;
-      this.height = properties.height;
-      console.log("MineEntrance", { width: this.width, height: this.height });
-    }
+    // if(!spriteKey) {
+    //   this.width = properties.width
+    //   this.height = properties.height
+    //   console.log("MineEntrance", {width: this.width, height: this.height})
+    // }
     //console.log(properties)
+
+    let centerX, centerY;
+    if (properties.width && properties.height) {
+      centerX = this.x + properties.width / 2;
+      centerY = this.y + properties.height / 2;
+    } else {
+      centerX = this.x;
+      centerY = this.y;
+    }
+    this.x = centerX;
+    this.y = centerY;
 
     this.anchor.set(0.5, 0.5);
     this.scale.set(2, 2);
@@ -11116,7 +11128,7 @@ const centerGameObjects = objects => {
     // var confusionTween = this.game.add.tween(this.confusion);
     // confusionTween.to({x: 750}, 5500, Phaser.Easing.Elastic.InOut, true, 0, -1, true);
 
-    this.loader.setupPhysics();
+    //this.loader.setupPhysics();
     this.miner.setupPhysics();
 
     this.game.camera.follow(this.miner);
@@ -11223,12 +11235,15 @@ class Blood extends Phaser.Sprite {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__sprites_MineEntrance__ = __webpack_require__(/*! ./sprites/MineEntrance */ 91);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sprites_Blocker__ = __webpack_require__(/*! ./sprites/Blocker */ 347);
+
 
 
 class LevelLoader {
   static get ObjMapper() {
     return {
       'MineEntrance': __WEBPACK_IMPORTED_MODULE_0__sprites_MineEntrance__["a" /* default */],
+      'Blocker': __WEBPACK_IMPORTED_MODULE_1__sprites_Blocker__["a" /* default */],
       'MinerStart': (game, x, y) => {
         this.x = x;this.y = y;
       }
@@ -11300,6 +11315,8 @@ class LevelLoader {
 
     this.layer.sendToBack();
     this.onLayerLoaded.dispatch();
+
+    this.setupPhysics();
   }
 
   _loadLayerObjects(layerName) {
@@ -11308,36 +11325,31 @@ class LevelLoader {
     const game = this.game;
     let layerObjects = map.objects[layerName + ' Objects'];
     let mapObjInstance = null;
-    let centerX, centerY;
     let properties = {};
+    let x, y;
 
     layerObjects.forEach((obj, index, array) => {
-      centerX = obj.x;
-      centerY = obj.y;
 
       properties = obj.properties || {};
 
       // TODO: get center of obj for placement.
       console.log(obj.type, obj);
-      if (obj.width && obj.height) {
-        centerX = obj.x + obj.width / 2;
-        centerY = obj.y + obj.height / 2;
-      }
-      properties.centerX = centerX;
-      properties.centerY = centerY;
-      properties.width = obj.width;
-      properties.height = obj.height;
+
+      x = obj.x * SCALE;
+      y = obj.y * SCALE;
+      properties.width = obj.width * SCALE;
+      properties.height = obj.height * SCALE;
 
       if (obj.type === 'MinerStart') {
-        this.playerStart.set(centerX * SCALE, centerY * SCALE);
+        this.playerStart.set(x, y);
         return;
       } else if (obj.type === 'MineEntrance') {
-        mapObjInstance = new __WEBPACK_IMPORTED_MODULE_0__sprites_MineEntrance__["a" /* default */](game, centerX * SCALE, centerY * SCALE, properties);
+        mapObjInstance = new __WEBPACK_IMPORTED_MODULE_0__sprites_MineEntrance__["a" /* default */](game, x, y, properties);
         mapObjInstance.onTransition.add(newLayerName => {
           this.loadLayer(newLayerName);
         });
       } else {
-        mapObjInstance = new LevelLoader.ObjMapper[obj.type](game, centerX * SCALE, centerY * SCALE, properties);
+        mapObjInstance = new LevelLoader.ObjMapper[obj.type](game, x, y, properties);
       }
 
       if (mapObjInstance.isCollidable) {
@@ -11371,6 +11383,43 @@ class LevelLoader {
   gameHeight: 600,
   localStorageName: 'cf-prospector'
 });
+
+/***/ }),
+/* 346 */,
+/* 347 */
+/*!********************************!*\
+  !*** ./src/sprites/Blocker.js ***!
+  \********************************/
+/*! exports provided: default */
+/*! exports used: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+class Blocker extends Phaser.Sprite {
+  get isCollidable() {
+    return true;
+  }
+
+  get center() {
+    return false;
+  }
+
+  constructor(game, x, y, properties) {
+    super(game, x, y);
+
+    this.properties = properties;
+    this.width = properties.width;
+    this.height = properties.height;
+  }
+
+  setupPhysics() {
+    this.body.immovable = true;
+  }
+
+  collideWith() {}
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = Blocker;
+
 
 /***/ })
 ],[131]);
