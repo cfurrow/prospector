@@ -1,4 +1,4 @@
-export default class Blocker extends Phaser.Sprite {
+export default class Blocker extends Phaser.GameObjects.Sprite {
   get isCollidable() {
     return true;
   }
@@ -20,6 +20,6 @@ export default class Blocker extends Phaser.Sprite {
   }
 
   collideWith() {
-    
+
   }
 }

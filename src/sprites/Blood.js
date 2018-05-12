@@ -1,4 +1,4 @@
-export default class Blood extends Phaser.Sprite {
+export default class Blood extends Phaser.GameObjects.Sprite {
   constructor(game, x, y) {
     super(game, x, y, 'blood');
 

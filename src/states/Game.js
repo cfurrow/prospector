@@ -6,7 +6,7 @@ import Blood from '../sprites/Blood'
 import MineEntrance from '../sprites/MineEntrance'
 import LevelLoader from '../LevelLoader'
 
-export default class extends Phaser.State {
+export default class extends Phaser.Scene {
   init() {}
   preload() {}
 

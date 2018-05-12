@@ -1,7 +1,7 @@
-export default class MineEntrance extends Phaser.Sprite {
+export default class MineEntrance extends Phaser.GameObjects.Sprite {
   constructor(game, x, y, properties) {
     let spriteKey = properties.SpriteKey
-    
+
     super(game, x, y, spriteKey)
     // if(!spriteKey) {
     //   this.width = properties.width
@@ -9,7 +9,7 @@ export default class MineEntrance extends Phaser.Sprite {
     //   console.log("MineEntrance", {width: this.width, height: this.height})
     // }
     //console.log(properties)
-    
+
     let centerX, centerY
     if(properties.width && properties.height) {
       centerX = this.x + (properties.width / 2)
@@ -47,7 +47,7 @@ export default class MineEntrance extends Phaser.Sprite {
     this.body.immovable = true;
   }
 
-  static preload(game) {
-    game.load.spritesheet('mine', 'assets/gold-mine.png', 96, 96);
+  static preload(scene) {
+    scene.load.spritesheet('mine', 'assets/gold-mine.png', 96, 96);
   }
 }

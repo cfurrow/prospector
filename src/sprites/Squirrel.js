@@ -1,4 +1,4 @@
-export default class Squirrel extends Phaser.Sprite {
+export default class Squirrel extends Phaser.GameObjects.Sprite {
   constructor(game, x, y) {
     super(game, x, y, 'squirrel')
     this.scale.set(2,2);
@@ -14,8 +14,8 @@ export default class Squirrel extends Phaser.Sprite {
     this.collideWorldBounds = true;
   }
 
-  static preload() {
-    game.load.spritesheet('squirrel', 'assets/Monster-squirrel.png', 32, 32, -1);
+  static preload(scene) {
+    scene.load.spritesheet('squirrel', 'assets/Monster-squirrel.png', 32, 32, -1);
   }
 
   static createAtRandom(game) {

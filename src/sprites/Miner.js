@@ -1,4 +1,4 @@
-export default class Miner extends Phaser.Sprite {
+export default class Miner extends Phaser.GameObjects.Sprite {
   static get width() {
     return 72
   }
@@ -20,11 +20,11 @@ export default class Miner extends Phaser.Sprite {
     this.yWalkFrame = null;
   }
 
-  static preload(game) {
-    // spritesheet(key, url, frameWidth, frameHeight [, frameMax] [, margin] [, spacing] [, skipFrames]) 
+  static preload(scene) {
+    // spritesheet(key, url, frameWidth, frameHeight [, frameMax] [, margin] [, spacing] [, skipFrames])
     //game.load.spritesheet('miner', 'assets/miner.png', Miner.width, Miner.height, 65, 0);
-    game.load.spritesheet('miner', 'assets/miner.png', Miner.width, Miner.height);
-    game.load.spritesheet('miner-with-gold', 'assets/miner-with-gold.png', Miner.width, Miner.height);
+    scene.load.spritesheet('miner', 'assets/miner.png', Miner.width, Miner.height);
+    scene.load.spritesheet('miner-with-gold', 'assets/miner-with-gold.png', Miner.width, Miner.height);
   }
 
   static get facing() {
@@ -147,7 +147,7 @@ export default class Miner extends Phaser.Sprite {
     var hitboxes = this.game.add.group();
     hitboxes.enableBody = true;
     this.addChild(hitboxes);
-    
+
     this.axHitbox = hitboxes.create(20,-10,null);
     this.axHitbox.anchor.set(0.5,0.5);
     this.axHitbox.body.setSize(50,50,0,0);
