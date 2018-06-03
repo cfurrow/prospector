@@ -22,9 +22,8 @@ export default class Miner extends Phaser.GameObjects.Sprite {
 
   static preload(scene) {
     // spritesheet(key, url, frameWidth, frameHeight [, frameMax] [, margin] [, spacing] [, skipFrames])
-    //game.load.spritesheet('miner', 'assets/miner.png', Miner.width, Miner.height, 65, 0);
-    scene.load.spritesheet('miner', 'assets/miner.png', Miner.width, Miner.height);
-    scene.load.spritesheet('miner-with-gold', 'assets/miner-with-gold.png', Miner.width, Miner.height);
+    scene.load.spritesheet('miner', 'assets/miner.png', {frameWidth: Miner.width, frameHeight: Miner.height});
+    scene.load.spritesheet('miner-with-gold', 'assets/miner-with-gold.png', {frameWidth: Miner.width, frameHeight: Miner.height});
   }
 
   static get facing() {

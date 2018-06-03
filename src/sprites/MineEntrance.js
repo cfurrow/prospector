@@ -48,6 +48,6 @@ export default class MineEntrance extends Phaser.GameObjects.Sprite {
   }
 
   static preload(scene) {
-    scene.load.spritesheet('mine', 'assets/gold-mine.png', 96, 96);
+    scene.load.spritesheet('mine', 'assets/gold-mine.png', {frameWidth: 96, frameHeight:96});
   }
 }

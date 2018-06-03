@@ -15,7 +15,7 @@ export default class Squirrel extends Phaser.GameObjects.Sprite {
   }
 
   static preload(scene) {
-    scene.load.spritesheet('squirrel', 'assets/Monster-squirrel.png', 32, 32, -1);
+    scene.load.spritesheet('squirrel', 'assets/Monster-squirrel.png', {frameWidth: 32, frameHeight: 32});
   }
 
   static createAtRandom(game) {

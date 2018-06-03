@@ -3366,7 +3366,7 @@ class MineEntrance extends Phaser.GameObjects.Sprite {
   }
 
   static preload(scene) {
-    scene.load.spritesheet('mine', 'assets/gold-mine.png', 96, 96);
+    scene.load.spritesheet('mine', 'assets/gold-mine.png', { frameWidth: 96, frameHeight: 96 });
   }
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = MineEntrance;
@@ -4728,9 +4728,8 @@ class Miner extends Phaser.GameObjects.Sprite {
 
   static preload(scene) {
     // spritesheet(key, url, frameWidth, frameHeight [, frameMax] [, margin] [, spacing] [, skipFrames])
-    //game.load.spritesheet('miner', 'assets/miner.png', Miner.width, Miner.height, 65, 0);
-    scene.load.spritesheet('miner', 'assets/miner.png', Miner.width, Miner.height);
-    scene.load.spritesheet('miner-with-gold', 'assets/miner-with-gold.png', Miner.width, Miner.height);
+    scene.load.spritesheet('miner', 'assets/miner.png', { frameWidth: Miner.width, frameHeight: Miner.height });
+    scene.load.spritesheet('miner-with-gold', 'assets/miner-with-gold.png', { frameWidth: Miner.width, frameHeight: Miner.height });
   }
 
   static get facing() {
@@ -4892,7 +4891,7 @@ class Squirrel extends Phaser.GameObjects.Sprite {
   }
 
   static preload(scene) {
-    scene.load.spritesheet('squirrel', 'assets/Monster-squirrel.png', 32, 32, -1);
+    scene.load.spritesheet('squirrel', 'assets/Monster-squirrel.png', { frameWidth: 32, frameHeight: 32 });
   }
 
   static createAtRandom(game) {
@@ -12039,11 +12038,11 @@ if (window.cordova) {
     __WEBPACK_IMPORTED_MODULE_3__sprites_Squirrel__["a" /* default */].preload(this);
     __WEBPACK_IMPORTED_MODULE_4__sprites_MineEntrance__["a" /* default */].preload(this);
 
-    this.load.spritesheet('blood', 'assets/blood.png', 32, 32, -1, 32, 32);
+    this.load.spritesheet('blood', 'assets/blood.png', { frameWidth: 32, frameHeight: 32 });
 
     this.load.image('confusion', 'assets/infusionsoft.png', 300, 300);
 
-    this.load.tilemap('cave', 'assets/levels/cave.json', null, __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Tilemap.TILED_JSON);
+    this.load.tilemapTiledJSON('cave', 'assets/levels/cave.json');
     this.load.image('cave', 'assets/levels/cave.png');
     // this.game.load.image('grass', 'assets/levels/grass.png');
     // this.game.load.image('grass2', 'assets/levels/grass2.png');
