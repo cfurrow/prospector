@@ -7,14 +7,15 @@ export default class Miner extends Phaser.GameObjects.Sprite {
     return 72;
   }
 
-  constructor(game, x, y) {
-    super(game, x, y, 'miner')
-    this.scale.set(3,3);
-    this.anchor.set(0.5, 0.8);
-    this.smoothed = false;
+  constructor(scene, x, y) {
+    super(scene, x, y, 'miner');
 
-    this.controller       = this.game.input.keyboard.createCursorKeys();
-    this.controller.space = this.game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
+    this.scaleX = this.scaleY = 3;
+    //this.anchor.set(0.5, 0.8);
+    //this.smoothed = false;
+
+    this.controller       = scene.input.keyboard.createCursorKeys();
+    this.controller.space = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
     this.xWalkFrame = null;
     this.yWalkFrame = null;
@@ -47,30 +48,35 @@ export default class Miner extends Phaser.GameObjects.Sprite {
 
     if(this.controller.left.isDown) {
       this.action = 'walk';
-      this.scale.x = -Math.abs(this.scale.x);
-      this.body.velocity.x = -speed;
+      // TODO: use flip thing
+      this.scaleX = -Math.abs(this.scale.x);
+      // TODO
+      //this.body.velocity.x = -speed;
       this.xWalkFrame = this.xActionFrame = 'right';
     } else if(this.controller.right.isDown) {
       this.action = 'walk';
-      this.scale.x = Math.abs(this.scale.x);
-      this.body.velocity.x = speed;
+      // TODO: use flip
+      this.scaleX = Math.abs(this.scale.x);
+      // TODO
+      //this.body.velocity.x = speed;
       this.xWalkFrame = this.xActionFrame = 'right';
     } else {
       this.xWalkFrame = null;
-      this.body.velocity.x = 0;
+      // TODO
+      //this.body.velocity.x = 0;
     }
 
     if(this.controller.up.isDown) {
       this.action = 'walk';
-      this.body.velocity.y = -speed;
+      // TODO this.body.velocity.y = -speed;
       this.yWalkFrame = this.yActionFrame = 'up';
     }else if(this.controller.down.isDown) {
       this.action = 'walk';
-      this.body.velocity.y = speed;
+      // TODO this.body.velocity.y = speed;
       this.yWalkFrame = this.yActionFrame = 'down';
     } else {
       this.yWalkFrame = null;
-      this.body.velocity.y = 0;
+      //TODO this.body.velocity.y = 0;
     }
 
     if(!this._directionKeyIsDown()) {
@@ -78,8 +84,8 @@ export default class Miner extends Phaser.GameObjects.Sprite {
     }
 
     if(this.controller.space.isDown) {
-      this.body.velocity.x = 0;
-      this.body.velocity.y = 0;
+      //TODO his.body.velocity.x = 0;
+      //TODO this.body.velocity.y = 0;
       this.action = 'attack';
     }
 
@@ -106,7 +112,7 @@ export default class Miner extends Phaser.GameObjects.Sprite {
     var animationKey = null;
 
     if(this.action === null) {
-      this.animations.stop();
+      this.anims.stop();
       return;
     }
 
@@ -129,32 +135,33 @@ export default class Miner extends Phaser.GameObjects.Sprite {
   }
 
   create() {
-    this.game.physics.arcade.enable(this);
+    //this.game.physics.arcade.enable(this);
 
-    this.animations.add('walk-up',          [0, 5, 10, 15, 20], 10, true);
-    this.animations.add('walk-up-right',    [1, 6, 11, 16, 21], 10, true);
-    this.animations.add('walk-right',       [2, 7, 12, 17, 22], 10, true);
-    this.animations.add('walk-down-right',  [3, 8, 13, 18, 23], 10, true);
-    this.animations.add('walk-down',        [4, 9, 14, 19, 24], 10, true);
+    this.anims.animationManager.create({ key: 'walk-up',          frames:[0, 5, 10, 15, 20],    frameRate: 10, repeat: true});
+    this.anims.animationManager.create({ key: 'walk-up-right',    frames:[1, 6, 11, 16, 21],    frameRate: 10, repeat: true});
+    this.anims.animationManager.create({ key: 'walk-right',       frames:[2, 7, 12, 17, 22],    frameRate: 10, repeat: true});
+    this.anims.animationManager.create({ key: 'walk-down-right',  frames:[3, 8, 13, 18, 23],    frameRate: 10, repeat: true});
+    this.anims.animationManager.create({ key: 'walk-down',        frames:[4, 9, 14, 19, 24],    frameRate: 10, repeat: true});
 
-    this.animations.add('attack-up',         [25, 30, 35, 40, 45], 10, true);
-    this.animations.add('attack-up-right',   [26, 31, 36, 41, 46], 10, true);
-    this.animations.add('attack-right',      [27, 32, 37, 42, 47], 10, true);
-    this.animations.add('attack-down-right', [28, 33, 38, 43, 48], 10, true);
-    this.animations.add('attack-down',       [29, 34, 39, 44, 49], 10, true);
+    this.anims.animationManager.create({ key: 'attack-up',        frames: [25, 30, 35, 40, 45], frameRate: 10, repeat: true});
+    this.anims.animationManager.create({ key: 'attack-up-right',  frames: [26, 31, 36, 41, 46], frameRate: 10, repeat: true});
+    this.anims.animationManager.create({ key: 'attack-right',     frames: [27, 32, 37, 42, 47], frameRate: 10, repeat: true});
+    this.anims.animationManager.create({ key: 'attack-down-right',frames: [28, 33, 38, 43, 48], frameRate: 10, repeat: true});
+    this.anims.animationManager.create({ key: 'attack-down',      frames: [29, 34, 39, 44, 49], frameRate: 10, repeat: true});
 
-    var hitboxes = this.game.add.group();
-    hitboxes.enableBody = true;
-    this.addChild(hitboxes);
+    //var hitboxes = this.scene.add.group();
+    //hitboxes.enableBody = true;
+    //this.addChild(hitboxes);
 
-    this.axHitbox = hitboxes.create(20,-10,null);
-    this.axHitbox.anchor.set(0.5,0.5);
-    this.axHitbox.body.setSize(50,50,0,0);
+    // this.axHitbox = hitboxes.create(20,-10,null);
+    // this.axHitbox.anchor.set(0.5,0.5);
+    // this.axHitbox.body.setSize(50,50,0,0);
   }
 
   setupPhysics() {
-    this.body.collideWorldBounds = true;
-    this.body.allowDrag = true;
-    this.body.setSize(Miner.width / this.scale.x, Miner.height / this.scale.y, Miner.width / this.scale.x, Miner.height / this.scale.y);
+    // TODO
+    // this.body.collideWorldBounds = true;
+    // this.body.allowDrag = true;
+    // this.body.setSize(Miner.width / this.scale.x, Miner.height / this.scale.y, Miner.width / this.scale.x, Miner.height / this.scale.y);
   }
 }

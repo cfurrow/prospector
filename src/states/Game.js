@@ -11,28 +11,26 @@ export default class extends Phaser.Scene {
   preload() {}
 
   create() {
-    game.physics.startSystem(Phaser.Physics.ARCADE);
-
-    this.miner = new Miner(game, 0,0);
+    this.miner = new Miner(this, 0,0);
     this.miner.create();
 
-    this.loader = new LevelLoader(game);
-    this.loader.onLayerLoaded.add(() => {
-      this.miner.position.set(this.loader.playerStart.x, this.loader.playerStart.y)
-    })
+    this.loader = new LevelLoader(this);
+    this.events.on('onLayerLoaded', () => {
+      this.miner.setPosition(this.loader.playerStart.x, this.loader.playerStart.y)
+    });
+
     this.map = this.loader.loadMap('cave')
     this.loader.loadLayer('Overworld');
 
-
-    this.group = game.add.group();
-    this.group.addChild(this.miner);
+    this.group = this.add.group();
+    this.group.add(this.miner);
 
     // for(var i=0; i < 500; i++) {
     //   this.group.addChild(Squirrel.createAtRandom(this.game));
     // }
-    this.group.sort();
+    //this.group.sort();
 
-    this.blood = new Blood(game, 1, 1)
+    this.blood = new Blood(this, 1, 1)
 
     // this.confusion = this.game.add.sprite(50, 550, 'confusion');
     // this.confusion.anchor.set(0.5, 0.5);
@@ -44,8 +42,7 @@ export default class extends Phaser.Scene {
 
     //this.loader.setupPhysics();
     this.miner.setupPhysics();
-
-    this.game.camera.follow(this.miner);
+    this.cameras.main.startFollow(this.miner);
   }
 
   mineSomeGold() {
@@ -85,13 +82,18 @@ export default class extends Phaser.Scene {
     var speed = 200;
     //this.mine.frame = 0; // reset to "off"
 
-    this.game.physics.arcade.collide(this.miner, this.loader.collidables, this.doCollision, null, this);
-    this.game.physics.arcade.collide(this.miner, this.layer);
+    // TODO
+    // this.game.physics.arcade.collide(this.miner, this.loader.collidables, this.doCollision, null, this);
+    // this.game.physics.arcade.collide(this.miner, this.layer);
 
     this.miner.update();
 
-    this.group.forEachAlive(function(s){ s.update(); });
-    this.group.sort('y', Phaser.Group.SORT_ASCENDING);
+    this.group.children.each(function(s) {
+      if(s.active) {
+        s.update();
+      }
+    });
+    //this.group.sort('y', Phaser.Group.SORT_ASCENDING);
   }
 
   render () {

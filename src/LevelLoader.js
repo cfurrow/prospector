@@ -11,8 +11,8 @@ export default class LevelLoader {
     }
   }
 
-  get game() {
-    return this._game;
+  get scene() {
+    return this._scene;
   }
 
   get map() {
@@ -27,19 +27,14 @@ export default class LevelLoader {
     return this._collidables;
   }
 
-  get onLayerLoaded() {
-    return this._onLayerLoaded;
-  }
-
-  constructor(game) {
-    this._game = game
-    this._playerStart = new PIXI.Point();
-    this._onLayerLoaded = new Phaser.Signal();
+  constructor(scene) {
+    this._scene = scene
+    this._playerStart = new Phaser.Geom.Point();
     // parent, name, addToStage, enableBody, physicsBodyType
   }
 
   loadMap(name) {
-    this._map = game.add.tilemap(name);
+    this._map = this.scene.add.tilemap(name);
     this._loadTilesetsFromCache()
 
     return this._map
@@ -56,7 +51,7 @@ export default class LevelLoader {
   loadLayer(name) {
     const SCALE = 3;
     let map = this.map;
-    const game = this.game;
+    const scene = this.scene;
 
     if(this.layer) {
       this.layer.destroy();
@@ -66,16 +61,16 @@ export default class LevelLoader {
       this.collidables.destroy();
     }
 
-    this.layer = map.createLayer(name);
-    this.layer.setScale(SCALE);
-    this.layer.resizeWorld();
+    // TODO: this.layer = map.createStaticLayer(name);
+    // TODO: this.layer.setScale(SCALE);
+    // TODO: this.layer.resizeWorld();
 
-    this._collidables = game.add.group(this.game.world, 'collidables', false, true, Phaser.Physics.ARCADE);
+    // TODO: this._collidables = scene.add.group('collidables', false, true, Phaser.Physics.ARCADE);
 
     this._loadLayerObjects(name)
 
-    this.layer.sendToBack();
-    this.onLayerLoaded.dispatch();
+    // TODO: this.layer.sendToBack();
+    this.scene.events.emit('onLayerLoaded');
 
     this.setupPhysics()
   }
@@ -84,25 +79,25 @@ export default class LevelLoader {
     const SCALE = 3;
     const map = this.map;
     const game = this.game;
-    let layerObjects = map.objects[layerName + ' Objects'];
+
+    let objectLayer = map.getObjectLayer(layerName + ' Objects');
     let mapObjInstance = null;
     let properties = {};
     let x, y;
 
-    layerObjects.forEach( (obj, index, array) => {
-
+    for(let obj of objectLayer.objects) {
       properties = obj.properties || {}
 
       // TODO: get center of obj for placement.
       console.log(obj.type, obj)
-      
+
       x = obj.x * SCALE
       y = obj.y * SCALE
       properties.width = obj.width * SCALE
       properties.height = obj.height * SCALE
 
       if(obj.type === 'MinerStart') {
-        this.playerStart.set(x, y);
+        this.playerStart.setTo(x, y);
         return;
       } else if (obj.type === 'MineEntrance') {
         mapObjInstance = new MineEntrance(game, x, y, properties);
@@ -119,10 +114,10 @@ export default class LevelLoader {
       } else {
         game.add.existing(mapObjInstance);
       }
-    })
+    }
   }
 
   setupPhysics() {
-    this.collidables.forEach( (c) => c.setupPhysics() )
+    //TODO: this.collidables.forEach( (c) => c.setupPhysics() )
   }
 }

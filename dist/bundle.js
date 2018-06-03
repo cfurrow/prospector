@@ -4713,14 +4713,15 @@ class Miner extends Phaser.GameObjects.Sprite {
     return 72;
   }
 
-  constructor(game, x, y) {
-    super(game, x, y, 'miner');
-    this.scale.set(3, 3);
-    this.anchor.set(0.5, 0.8);
-    this.smoothed = false;
+  constructor(scene, x, y) {
+    super(scene, x, y, 'miner');
 
-    this.controller = this.game.input.keyboard.createCursorKeys();
-    this.controller.space = this.game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
+    this.scaleX = this.scaleY = 3;
+    //this.anchor.set(0.5, 0.8);
+    //this.smoothed = false;
+
+    this.controller = scene.input.keyboard.createCursorKeys();
+    this.controller.space = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
     this.xWalkFrame = null;
     this.yWalkFrame = null;
@@ -4753,30 +4754,35 @@ class Miner extends Phaser.GameObjects.Sprite {
 
     if (this.controller.left.isDown) {
       this.action = 'walk';
-      this.scale.x = -Math.abs(this.scale.x);
-      this.body.velocity.x = -speed;
+      // TODO: use flip thing
+      this.scaleX = -Math.abs(this.scale.x);
+      // TODO
+      //this.body.velocity.x = -speed;
       this.xWalkFrame = this.xActionFrame = 'right';
     } else if (this.controller.right.isDown) {
       this.action = 'walk';
-      this.scale.x = Math.abs(this.scale.x);
-      this.body.velocity.x = speed;
+      // TODO: use flip
+      this.scaleX = Math.abs(this.scale.x);
+      // TODO
+      //this.body.velocity.x = speed;
       this.xWalkFrame = this.xActionFrame = 'right';
     } else {
       this.xWalkFrame = null;
-      this.body.velocity.x = 0;
+      // TODO
+      //this.body.velocity.x = 0;
     }
 
     if (this.controller.up.isDown) {
       this.action = 'walk';
-      this.body.velocity.y = -speed;
+      // TODO this.body.velocity.y = -speed;
       this.yWalkFrame = this.yActionFrame = 'up';
     } else if (this.controller.down.isDown) {
       this.action = 'walk';
-      this.body.velocity.y = speed;
+      // TODO this.body.velocity.y = speed;
       this.yWalkFrame = this.yActionFrame = 'down';
     } else {
       this.yWalkFrame = null;
-      this.body.velocity.y = 0;
+      //TODO this.body.velocity.y = 0;
     }
 
     if (!this._directionKeyIsDown()) {
@@ -4784,8 +4790,8 @@ class Miner extends Phaser.GameObjects.Sprite {
     }
 
     if (this.controller.space.isDown) {
-      this.body.velocity.x = 0;
-      this.body.velocity.y = 0;
+      //TODO his.body.velocity.x = 0;
+      //TODO this.body.velocity.y = 0;
       this.action = 'attack';
     }
 
@@ -4809,7 +4815,7 @@ class Miner extends Phaser.GameObjects.Sprite {
     var animationKey = null;
 
     if (this.action === null) {
-      this.animations.stop();
+      this.anims.stop();
       return;
     }
 
@@ -4832,33 +4838,34 @@ class Miner extends Phaser.GameObjects.Sprite {
   }
 
   create() {
-    this.game.physics.arcade.enable(this);
+    //this.game.physics.arcade.enable(this);
 
-    this.animations.add('walk-up', [0, 5, 10, 15, 20], 10, true);
-    this.animations.add('walk-up-right', [1, 6, 11, 16, 21], 10, true);
-    this.animations.add('walk-right', [2, 7, 12, 17, 22], 10, true);
-    this.animations.add('walk-down-right', [3, 8, 13, 18, 23], 10, true);
-    this.animations.add('walk-down', [4, 9, 14, 19, 24], 10, true);
+    this.anims.animationManager.create({ key: 'walk-up', frames: [0, 5, 10, 15, 20], frameRate: 10, repeat: true });
+    this.anims.animationManager.create({ key: 'walk-up-right', frames: [1, 6, 11, 16, 21], frameRate: 10, repeat: true });
+    this.anims.animationManager.create({ key: 'walk-right', frames: [2, 7, 12, 17, 22], frameRate: 10, repeat: true });
+    this.anims.animationManager.create({ key: 'walk-down-right', frames: [3, 8, 13, 18, 23], frameRate: 10, repeat: true });
+    this.anims.animationManager.create({ key: 'walk-down', frames: [4, 9, 14, 19, 24], frameRate: 10, repeat: true });
 
-    this.animations.add('attack-up', [25, 30, 35, 40, 45], 10, true);
-    this.animations.add('attack-up-right', [26, 31, 36, 41, 46], 10, true);
-    this.animations.add('attack-right', [27, 32, 37, 42, 47], 10, true);
-    this.animations.add('attack-down-right', [28, 33, 38, 43, 48], 10, true);
-    this.animations.add('attack-down', [29, 34, 39, 44, 49], 10, true);
+    this.anims.animationManager.create({ key: 'attack-up', frames: [25, 30, 35, 40, 45], frameRate: 10, repeat: true });
+    this.anims.animationManager.create({ key: 'attack-up-right', frames: [26, 31, 36, 41, 46], frameRate: 10, repeat: true });
+    this.anims.animationManager.create({ key: 'attack-right', frames: [27, 32, 37, 42, 47], frameRate: 10, repeat: true });
+    this.anims.animationManager.create({ key: 'attack-down-right', frames: [28, 33, 38, 43, 48], frameRate: 10, repeat: true });
+    this.anims.animationManager.create({ key: 'attack-down', frames: [29, 34, 39, 44, 49], frameRate: 10, repeat: true });
 
-    var hitboxes = this.game.add.group();
-    hitboxes.enableBody = true;
-    this.addChild(hitboxes);
+    //var hitboxes = this.scene.add.group();
+    //hitboxes.enableBody = true;
+    //this.addChild(hitboxes);
 
-    this.axHitbox = hitboxes.create(20, -10, null);
-    this.axHitbox.anchor.set(0.5, 0.5);
-    this.axHitbox.body.setSize(50, 50, 0, 0);
+    // this.axHitbox = hitboxes.create(20,-10,null);
+    // this.axHitbox.anchor.set(0.5,0.5);
+    // this.axHitbox.body.setSize(50,50,0,0);
   }
 
   setupPhysics() {
-    this.body.collideWorldBounds = true;
-    this.body.allowDrag = true;
-    this.body.setSize(Miner.width / this.scale.x, Miner.height / this.scale.y, Miner.width / this.scale.x, Miner.height / this.scale.y);
+    // TODO
+    // this.body.collideWorldBounds = true;
+    // this.body.allowDrag = true;
+    // this.body.setSize(Miner.width / this.scale.x, Miner.height / this.scale.y, Miner.width / this.scale.x, Miner.height / this.scale.y);
   }
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = Miner;
@@ -12100,27 +12107,26 @@ const centerGameObjects = objects => {
   preload() {}
 
   create() {
-    game.physics.startSystem(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Physics.ARCADE);
-
-    this.miner = new __WEBPACK_IMPORTED_MODULE_1__sprites_Miner__["a" /* default */](game, 0, 0);
+    this.miner = new __WEBPACK_IMPORTED_MODULE_1__sprites_Miner__["a" /* default */](this, 0, 0);
     this.miner.create();
 
-    this.loader = new __WEBPACK_IMPORTED_MODULE_5__LevelLoader__["a" /* default */](game);
-    this.loader.onLayerLoaded.add(() => {
-      this.miner.position.set(this.loader.playerStart.x, this.loader.playerStart.y);
+    this.loader = new __WEBPACK_IMPORTED_MODULE_5__LevelLoader__["a" /* default */](this);
+    this.events.on('onLayerLoaded', () => {
+      this.miner.setPosition(this.loader.playerStart.x, this.loader.playerStart.y);
     });
+
     this.map = this.loader.loadMap('cave');
     this.loader.loadLayer('Overworld');
 
-    this.group = game.add.group();
-    this.group.addChild(this.miner);
+    this.group = this.add.group();
+    this.group.add(this.miner);
 
     // for(var i=0; i < 500; i++) {
     //   this.group.addChild(Squirrel.createAtRandom(this.game));
     // }
-    this.group.sort();
+    //this.group.sort();
 
-    this.blood = new __WEBPACK_IMPORTED_MODULE_3__sprites_Blood__["a" /* default */](game, 1, 1);
+    this.blood = new __WEBPACK_IMPORTED_MODULE_3__sprites_Blood__["a" /* default */](this, 1, 1);
 
     // this.confusion = this.game.add.sprite(50, 550, 'confusion');
     // this.confusion.anchor.set(0.5, 0.5);
@@ -12132,8 +12138,7 @@ const centerGameObjects = objects => {
 
     //this.loader.setupPhysics();
     this.miner.setupPhysics();
-
-    this.game.camera.follow(this.miner);
+    this.cameras.main.startFollow(this.miner);
   }
 
   mineSomeGold() {
@@ -12173,15 +12178,18 @@ const centerGameObjects = objects => {
     var speed = 200;
     //this.mine.frame = 0; // reset to "off"
 
-    this.game.physics.arcade.collide(this.miner, this.loader.collidables, this.doCollision, null, this);
-    this.game.physics.arcade.collide(this.miner, this.layer);
+    // TODO
+    // this.game.physics.arcade.collide(this.miner, this.loader.collidables, this.doCollision, null, this);
+    // this.game.physics.arcade.collide(this.miner, this.layer);
 
     this.miner.update();
 
-    this.group.forEachAlive(function (s) {
-      s.update();
+    this.group.children.each(function (s) {
+      if (s.active) {
+        s.update();
+      }
     });
-    this.group.sort('y', __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Group.SORT_ASCENDING);
+    //this.group.sort('y', Phaser.Group.SORT_ASCENDING);
   }
 
   render() {
@@ -12209,18 +12217,18 @@ const centerGameObjects = objects => {
 
 "use strict";
 class Blood extends Phaser.GameObjects.Sprite {
-  constructor(game, x, y) {
-    super(game, x, y, 'blood');
+  constructor(scene, x, y) {
+    super(scene, x, y, 'blood');
 
     this.visible = false;
-    this.scale.set(6, 6);
-    this.anchor.set(0.5, 0.5);
-    this.smoothed = false;
+    this.scaleX = this.scaleY = 6;
+    //this.anchor.set(0.5,0.5);
+    //TODO: this.smoothed = false;
 
-    var bloodAnimation = this.animations.add('squirt', [0, 5, 10], 5, false);
-    bloodAnimation.onComplete.add(function (sprite, animation) {
+    var bloodAnimation = this.anims.animationManager.create({ key: 'squirt', frames: [0, 5, 10], frameRate: 5, repeat: false });
+    bloodAnimation.onComplete = function (sprite, animation) {
       sprite.visible = false;
-    }, this);
+    };
   }
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = Blood;
@@ -12252,8 +12260,8 @@ class LevelLoader {
     };
   }
 
-  get game() {
-    return this._game;
+  get scene() {
+    return this._scene;
   }
 
   get map() {
@@ -12268,19 +12276,14 @@ class LevelLoader {
     return this._collidables;
   }
 
-  get onLayerLoaded() {
-    return this._onLayerLoaded;
-  }
-
-  constructor(game) {
-    this._game = game;
-    this._playerStart = new PIXI.Point();
-    this._onLayerLoaded = new Phaser.Signal();
+  constructor(scene) {
+    this._scene = scene;
+    this._playerStart = new Phaser.Geom.Point();
     // parent, name, addToStage, enableBody, physicsBodyType
   }
 
   loadMap(name) {
-    this._map = game.add.tilemap(name);
+    this._map = this.scene.add.tilemap(name);
     this._loadTilesetsFromCache();
 
     return this._map;
@@ -12297,7 +12300,7 @@ class LevelLoader {
   loadLayer(name) {
     const SCALE = 3;
     let map = this.map;
-    const game = this.game;
+    const scene = this.scene;
 
     if (this.layer) {
       this.layer.destroy();
@@ -12307,16 +12310,16 @@ class LevelLoader {
       this.collidables.destroy();
     }
 
-    this.layer = map.createLayer(name);
-    this.layer.setScale(SCALE);
-    this.layer.resizeWorld();
+    // TODO: this.layer = map.createStaticLayer(name);
+    // TODO: this.layer.setScale(SCALE);
+    // TODO: this.layer.resizeWorld();
 
-    this._collidables = game.add.group(this.game.world, 'collidables', false, true, Phaser.Physics.ARCADE);
+    // TODO: this._collidables = scene.add.group('collidables', false, true, Phaser.Physics.ARCADE);
 
     this._loadLayerObjects(name);
 
-    this.layer.sendToBack();
-    this.onLayerLoaded.dispatch();
+    // TODO: this.layer.sendToBack();
+    this.scene.events.emit('onLayerLoaded');
 
     this.setupPhysics();
   }
@@ -12325,13 +12328,13 @@ class LevelLoader {
     const SCALE = 3;
     const map = this.map;
     const game = this.game;
-    let layerObjects = map.objects[layerName + ' Objects'];
+
+    let objectLayer = map.getObjectLayer(layerName + ' Objects');
     let mapObjInstance = null;
     let properties = {};
     let x, y;
 
-    layerObjects.forEach((obj, index, array) => {
-
+    for (let obj of objectLayer.objects) {
       properties = obj.properties || {};
 
       // TODO: get center of obj for placement.
@@ -12343,7 +12346,7 @@ class LevelLoader {
       properties.height = obj.height * SCALE;
 
       if (obj.type === 'MinerStart') {
-        this.playerStart.set(x, y);
+        this.playerStart.setTo(x, y);
         return;
       } else if (obj.type === 'MineEntrance') {
         mapObjInstance = new __WEBPACK_IMPORTED_MODULE_0__sprites_MineEntrance__["a" /* default */](game, x, y, properties);
@@ -12360,11 +12363,11 @@ class LevelLoader {
       } else {
         game.add.existing(mapObjInstance);
       }
-    });
+    }
   }
 
   setupPhysics() {
-    this.collidables.forEach(c => c.setupPhysics());
+    //TODO: this.collidables.forEach( (c) => c.setupPhysics() )
   }
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = LevelLoader;
