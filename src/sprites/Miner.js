@@ -1,4 +1,4 @@
-export default class Miner extends Phaser.GameObjects.Sprite {
+export default class Miner extends Phaser.Physics.Arcade.Sprite {
   static get width() {
     return 72
   }
@@ -53,19 +53,19 @@ export default class Miner extends Phaser.GameObjects.Sprite {
       // TODO: use flip thing
       this.scaleX = -Math.abs(this.scaleX);
       // TODO
-      //this.body.velocity.x = -speed;
+      this.body.velocity.x = -speed;
       this.xWalkFrame = this.xActionFrame = 'right';
     } else if(this.controller.right.isDown) {
       this.action = 'walk';
       // TODO: use flip
       this.scaleX = Math.abs(this.scaleX);
       // TODO
-      //this.body.velocity.x = speed;
+      this.body.velocity.x = speed;
       this.xWalkFrame = this.xActionFrame = 'right';
     } else {
       this.xWalkFrame = null;
       // TODO
-      //this.body.velocity.x = 0;
+      this.body.velocity.x = 0;
     }
 
     if(this.controller.up.isDown) {

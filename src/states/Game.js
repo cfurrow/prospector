@@ -8,6 +8,7 @@ import LevelLoader from '../LevelLoader'
 
 export default class extends Phaser.Scene {
   init() {}
+  
   preload() {}
 
   create() {
@@ -24,8 +25,7 @@ export default class extends Phaser.Scene {
     this.map = this.loader.loadMap('cave')
     this.loader.loadLayer('Overworld');
 
-    debugger
-    this.add.existing(this.miner);
+    this.physics.add.existing(this.miner);
     // this.group = this.add.group();
     // this.group.add(this.miner);
 

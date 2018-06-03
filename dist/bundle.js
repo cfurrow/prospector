@@ -4704,7 +4704,7 @@ module.exports = Math.scale || function scale(x, inLow, inHigh, outLow, outHigh)
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-class Miner extends Phaser.GameObjects.Sprite {
+class Miner extends Phaser.Physics.Arcade.Sprite {
   static get width() {
     return 72;
   }
@@ -4759,19 +4759,19 @@ class Miner extends Phaser.GameObjects.Sprite {
       // TODO: use flip thing
       this.scaleX = -Math.abs(this.scaleX);
       // TODO
-      //this.body.velocity.x = -speed;
+      this.body.velocity.x = -speed;
       this.xWalkFrame = this.xActionFrame = 'right';
     } else if (this.controller.right.isDown) {
       this.action = 'walk';
       // TODO: use flip
       this.scaleX = Math.abs(this.scaleX);
       // TODO
-      //this.body.velocity.x = speed;
+      this.body.velocity.x = speed;
       this.xWalkFrame = this.xActionFrame = 'right';
     } else {
       this.xWalkFrame = null;
       // TODO
-      //this.body.velocity.x = 0;
+      this.body.velocity.x = 0;
     }
 
     if (this.controller.up.isDown) {
@@ -11317,7 +11317,15 @@ class Game extends __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Game {
     const width = docElement.clientWidth > __WEBPACK_IMPORTED_MODULE_4__config__["a" /* default */].gameWidth ? __WEBPACK_IMPORTED_MODULE_4__config__["a" /* default */].gameWidth : docElement.clientWidth;
     const height = docElement.clientHeight > __WEBPACK_IMPORTED_MODULE_4__config__["a" /* default */].gameHeight ? __WEBPACK_IMPORTED_MODULE_4__config__["a" /* default */].gameHeight : docElement.clientHeight;
 
-    super(width, height, __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.CANVAS, 'content', null);
+    debugger;
+    super({
+      type: __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.AUTO,
+      width: width,
+      height: height,
+      physics: {
+        default: 'arcade'
+      }
+    });
 
     this.scene.add('Boot', __WEBPACK_IMPORTED_MODULE_1__states_Boot__["a" /* default */], false);
     this.scene.add('Splash', __WEBPACK_IMPORTED_MODULE_2__states_Splash__["a" /* default */], false);
@@ -12112,6 +12120,7 @@ const centerGameObjects = objects => {
 
 /* harmony default export */ __webpack_exports__["a"] = (class extends __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Scene {
   init() {}
+
   preload() {}
 
   create() {
@@ -12128,8 +12137,7 @@ const centerGameObjects = objects => {
     this.map = this.loader.loadMap('cave');
     this.loader.loadLayer('Overworld');
 
-    debugger;
-    this.add.existing(this.miner);
+    this.physics.add.existing(this.miner);
     // this.group = this.add.group();
     // this.group.add(this.miner);
 

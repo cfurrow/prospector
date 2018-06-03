@@ -12,7 +12,15 @@ class Game extends Phaser.Game {
     const width = docElement.clientWidth > config.gameWidth ? config.gameWidth : docElement.clientWidth
     const height = docElement.clientHeight > config.gameHeight ? config.gameHeight : docElement.clientHeight
 
-    super(width, height, Phaser.CANVAS, 'content', null)
+    debugger
+    super({
+      type: Phaser.AUTO,
+      width: width,
+      height: height,
+      physics: {
+        default: 'arcade'
+      }
+    });
 
     this.scene.add('Boot', BootState, false)
     this.scene.add('Splash', SplashState, false)
