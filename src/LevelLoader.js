@@ -49,8 +49,10 @@ export default class LevelLoader {
   }
 
   loadLayer(name) {
+    console.log(`===== loading layer ${name}`)
     const SCALE = 3;
     let map = this.map;
+    let tileset = null;
     const scene = this.scene;
 
     if(this.layer) {
@@ -61,21 +63,25 @@ export default class LevelLoader {
       this.collidables.destroy();
     }
 
-    // TODO: this.layer = map.createStaticLayer(name);
-    // TODO: this.layer.setScale(SCALE);
-    // TODO: this.layer.resizeWorld();
+    tileset = map.tilesets[0];
+    this.layer = map.createStaticLayer(name, tileset, 0, 0);
+    this.layer.setScale(SCALE);
 
+    // TODO: this.layer.resizeWorld();
     // TODO: this._collidables = scene.add.group('collidables', false, true, Phaser.Physics.ARCADE);
 
     this._loadLayerObjects(name)
 
     // TODO: this.layer.sendToBack();
+    this.layer.setDepth(0);
     this.scene.events.emit('onLayerLoaded');
+    console.log(`===== layer ${name} loaded!`)
 
     this.setupPhysics()
   }
 
   _loadLayerObjects(layerName) {
+    console.log(`===== loading layer objects for ${layerName}`)
     const SCALE = 3;
     const map = this.map;
     const game = this.game;
@@ -85,11 +91,13 @@ export default class LevelLoader {
     let properties = {};
     let x, y;
 
+    console.log(`===== found ${objectLayer.objects.length} objects in layer ${layerName}.`)
+    console.log(objectLayer.objects)
     for(let obj of objectLayer.objects) {
       properties = obj.properties || {}
 
       // TODO: get center of obj for placement.
-      console.log(obj.type, obj)
+      console.log(`===== Initializing object ${obj.type}.`, obj)
 
       x = obj.x * SCALE
       y = obj.y * SCALE

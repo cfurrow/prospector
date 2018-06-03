@@ -19,11 +19,13 @@ export default class Miner extends Phaser.GameObjects.Sprite {
 
     this.xWalkFrame = null;
     this.yWalkFrame = null;
+
+    this.depth = 1;
   }
 
   static preload(scene) {
     // spritesheet(key, url, frameWidth, frameHeight [, frameMax] [, margin] [, spacing] [, skipFrames])
-    scene.load.spritesheet('miner', 'assets/miner.png', {frameWidth: Miner.width, frameHeight: Miner.height});
+    scene.load.spritesheet('miner',           'assets/miner.png',           {frameWidth: Miner.width, frameHeight: Miner.height});
     scene.load.spritesheet('miner-with-gold', 'assets/miner-with-gold.png', {frameWidth: Miner.width, frameHeight: Miner.height});
   }
 
@@ -49,14 +51,14 @@ export default class Miner extends Phaser.GameObjects.Sprite {
     if(this.controller.left.isDown) {
       this.action = 'walk';
       // TODO: use flip thing
-      this.scaleX = -Math.abs(this.scale.x);
+      this.scaleX = -Math.abs(this.scaleX);
       // TODO
       //this.body.velocity.x = -speed;
       this.xWalkFrame = this.xActionFrame = 'right';
     } else if(this.controller.right.isDown) {
       this.action = 'walk';
       // TODO: use flip
-      this.scaleX = Math.abs(this.scale.x);
+      this.scaleX = Math.abs(this.scaleX);
       // TODO
       //this.body.velocity.x = speed;
       this.xWalkFrame = this.xActionFrame = 'right';
@@ -131,24 +133,30 @@ export default class Miner extends Phaser.GameObjects.Sprite {
     }
     animationKey = this.action + '-' + directionKey;
 
-    this.animations.play(animationKey);
+    if(this.lastAnimationKey && this.lastAnimationKey == animationKey) {
+      console.log(`===== animationKey: ${animationKey}`)
+    } else {
+      this.lastAnimationKey = animationKey;
+    }
+    this.anims.play(animationKey);
   }
 
   create() {
     //this.game.physics.arcade.enable(this);
 
-    this.anims.animationManager.create({ key: 'walk-up',          frames:[0, 5, 10, 15, 20],    frameRate: 10, repeat: true});
-    this.anims.animationManager.create({ key: 'walk-up-right',    frames:[1, 6, 11, 16, 21],    frameRate: 10, repeat: true});
-    this.anims.animationManager.create({ key: 'walk-right',       frames:[2, 7, 12, 17, 22],    frameRate: 10, repeat: true});
-    this.anims.animationManager.create({ key: 'walk-down-right',  frames:[3, 8, 13, 18, 23],    frameRate: 10, repeat: true});
-    this.anims.animationManager.create({ key: 'walk-down',        frames:[4, 9, 14, 19, 24],    frameRate: 10, repeat: true});
+    this.anims.animationManager.create({ key: 'walk-up',          frames: this.anims.animationManager.generateFrameNames('miner', {frames:[0,5,10,15,20]}),    frameRate: 10, repeat: -1});
+    this.anims.animationManager.create({ key: 'walk-up-right',    frames: this.anims.animationManager.generateFrameNames('miner', {frames: [1, 6, 11, 16, 21]}),    frameRate: 10, repeat: -1});
+    this.anims.animationManager.create({ key: 'walk-right',       frames: this.anims.animationManager.generateFrameNames('miner', {frames: [2, 7, 12, 17, 22]}),    frameRate: 10, repeat: -1});
+    this.anims.animationManager.create({ key: 'walk-down-right',  frames: this.anims.animationManager.generateFrameNames('miner', {frames: [3, 8, 13, 18, 23]}),    frameRate: 10, repeat: -1});
+    this.anims.animationManager.create({ key: 'walk-down',        frames: this.anims.animationManager.generateFrameNames('miner', {frames: [4, 9, 14, 19, 24]}),    frameRate: 10, repeat: -1});
 
-    this.anims.animationManager.create({ key: 'attack-up',        frames: [25, 30, 35, 40, 45], frameRate: 10, repeat: true});
-    this.anims.animationManager.create({ key: 'attack-up-right',  frames: [26, 31, 36, 41, 46], frameRate: 10, repeat: true});
-    this.anims.animationManager.create({ key: 'attack-right',     frames: [27, 32, 37, 42, 47], frameRate: 10, repeat: true});
-    this.anims.animationManager.create({ key: 'attack-down-right',frames: [28, 33, 38, 43, 48], frameRate: 10, repeat: true});
-    this.anims.animationManager.create({ key: 'attack-down',      frames: [29, 34, 39, 44, 49], frameRate: 10, repeat: true});
+    this.anims.animationManager.create({ key: 'attack-up',        frames: [25, 30, 35, 40, 45], frameRate: 10, repeat: -1});
+    this.anims.animationManager.create({ key: 'attack-up-right',  frames: [26, 31, 36, 41, 46], frameRate: 10, repeat: -1});
+    this.anims.animationManager.create({ key: 'attack-right',     frames: [27, 32, 37, 42, 47], frameRate: 10, repeat: -1});
+    this.anims.animationManager.create({ key: 'attack-down-right',frames: [28, 33, 38, 43, 48], frameRate: 10, repeat: -1});
+    this.anims.animationManager.create({ key: 'attack-down',      frames: [29, 34, 39, 44, 49], frameRate: 10, repeat: -1});
 
+    // TODO
     //var hitboxes = this.scene.add.group();
     //hitboxes.enableBody = true;
     //this.addChild(hitboxes);

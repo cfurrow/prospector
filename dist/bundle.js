@@ -4725,6 +4725,8 @@ class Miner extends Phaser.GameObjects.Sprite {
 
     this.xWalkFrame = null;
     this.yWalkFrame = null;
+
+    this.depth = 1;
   }
 
   static preload(scene) {
@@ -4755,14 +4757,14 @@ class Miner extends Phaser.GameObjects.Sprite {
     if (this.controller.left.isDown) {
       this.action = 'walk';
       // TODO: use flip thing
-      this.scaleX = -Math.abs(this.scale.x);
+      this.scaleX = -Math.abs(this.scaleX);
       // TODO
       //this.body.velocity.x = -speed;
       this.xWalkFrame = this.xActionFrame = 'right';
     } else if (this.controller.right.isDown) {
       this.action = 'walk';
       // TODO: use flip
-      this.scaleX = Math.abs(this.scale.x);
+      this.scaleX = Math.abs(this.scaleX);
       // TODO
       //this.body.velocity.x = speed;
       this.xWalkFrame = this.xActionFrame = 'right';
@@ -4834,24 +4836,30 @@ class Miner extends Phaser.GameObjects.Sprite {
     }
     animationKey = this.action + '-' + directionKey;
 
-    this.animations.play(animationKey);
+    if (this.lastAnimationKey && this.lastAnimationKey == animationKey) {
+      console.log(`===== animationKey: ${animationKey}`);
+    } else {
+      this.lastAnimationKey = animationKey;
+    }
+    this.anims.play(animationKey);
   }
 
   create() {
     //this.game.physics.arcade.enable(this);
 
-    this.anims.animationManager.create({ key: 'walk-up', frames: [0, 5, 10, 15, 20], frameRate: 10, repeat: true });
-    this.anims.animationManager.create({ key: 'walk-up-right', frames: [1, 6, 11, 16, 21], frameRate: 10, repeat: true });
-    this.anims.animationManager.create({ key: 'walk-right', frames: [2, 7, 12, 17, 22], frameRate: 10, repeat: true });
-    this.anims.animationManager.create({ key: 'walk-down-right', frames: [3, 8, 13, 18, 23], frameRate: 10, repeat: true });
-    this.anims.animationManager.create({ key: 'walk-down', frames: [4, 9, 14, 19, 24], frameRate: 10, repeat: true });
+    this.anims.animationManager.create({ key: 'walk-up', frames: this.anims.animationManager.generateFrameNames('miner', { frames: [0, 5, 10, 15, 20] }), frameRate: 10, repeat: -1 });
+    this.anims.animationManager.create({ key: 'walk-up-right', frames: this.anims.animationManager.generateFrameNames('miner', { frames: [1, 6, 11, 16, 21] }), frameRate: 10, repeat: -1 });
+    this.anims.animationManager.create({ key: 'walk-right', frames: this.anims.animationManager.generateFrameNames('miner', { frames: [2, 7, 12, 17, 22] }), frameRate: 10, repeat: -1 });
+    this.anims.animationManager.create({ key: 'walk-down-right', frames: this.anims.animationManager.generateFrameNames('miner', { frames: [3, 8, 13, 18, 23] }), frameRate: 10, repeat: -1 });
+    this.anims.animationManager.create({ key: 'walk-down', frames: this.anims.animationManager.generateFrameNames('miner', { frames: [4, 9, 14, 19, 24] }), frameRate: 10, repeat: -1 });
 
-    this.anims.animationManager.create({ key: 'attack-up', frames: [25, 30, 35, 40, 45], frameRate: 10, repeat: true });
-    this.anims.animationManager.create({ key: 'attack-up-right', frames: [26, 31, 36, 41, 46], frameRate: 10, repeat: true });
-    this.anims.animationManager.create({ key: 'attack-right', frames: [27, 32, 37, 42, 47], frameRate: 10, repeat: true });
-    this.anims.animationManager.create({ key: 'attack-down-right', frames: [28, 33, 38, 43, 48], frameRate: 10, repeat: true });
-    this.anims.animationManager.create({ key: 'attack-down', frames: [29, 34, 39, 44, 49], frameRate: 10, repeat: true });
+    this.anims.animationManager.create({ key: 'attack-up', frames: [25, 30, 35, 40, 45], frameRate: 10, repeat: -1 });
+    this.anims.animationManager.create({ key: 'attack-up-right', frames: [26, 31, 36, 41, 46], frameRate: 10, repeat: -1 });
+    this.anims.animationManager.create({ key: 'attack-right', frames: [27, 32, 37, 42, 47], frameRate: 10, repeat: -1 });
+    this.anims.animationManager.create({ key: 'attack-down-right', frames: [28, 33, 38, 43, 48], frameRate: 10, repeat: -1 });
+    this.anims.animationManager.create({ key: 'attack-down', frames: [29, 34, 39, 44, 49], frameRate: 10, repeat: -1 });
 
+    // TODO
     //var hitboxes = this.scene.add.group();
     //hitboxes.enableBody = true;
     //this.addChild(hitboxes);
@@ -12112,14 +12120,18 @@ const centerGameObjects = objects => {
 
     this.loader = new __WEBPACK_IMPORTED_MODULE_5__LevelLoader__["a" /* default */](this);
     this.events.on('onLayerLoaded', () => {
+      console.log(`===== onLayerLoaded fired`);
+      console.log(`===== setting miner to position ${this.loader.playerStart.x}, ${this.loader.playerStart.y}`);
       this.miner.setPosition(this.loader.playerStart.x, this.loader.playerStart.y);
     });
 
     this.map = this.loader.loadMap('cave');
     this.loader.loadLayer('Overworld');
 
-    this.group = this.add.group();
-    this.group.add(this.miner);
+    debugger;
+    this.add.existing(this.miner);
+    // this.group = this.add.group();
+    // this.group.add(this.miner);
 
     // for(var i=0; i < 500; i++) {
     //   this.group.addChild(Squirrel.createAtRandom(this.game));
@@ -12184,11 +12196,11 @@ const centerGameObjects = objects => {
 
     this.miner.update();
 
-    this.group.children.each(function (s) {
-      if (s.active) {
-        s.update();
-      }
-    });
+    // this.group.children.each(function(s) {
+    //   if(s.active) {
+    //     s.update();
+    //   }
+    // });
     //this.group.sort('y', Phaser.Group.SORT_ASCENDING);
   }
 
@@ -12298,8 +12310,10 @@ class LevelLoader {
   }
 
   loadLayer(name) {
+    console.log(`===== loading layer ${name}`);
     const SCALE = 3;
     let map = this.map;
+    let tileset = null;
     const scene = this.scene;
 
     if (this.layer) {
@@ -12310,21 +12324,25 @@ class LevelLoader {
       this.collidables.destroy();
     }
 
-    // TODO: this.layer = map.createStaticLayer(name);
-    // TODO: this.layer.setScale(SCALE);
-    // TODO: this.layer.resizeWorld();
+    tileset = map.tilesets[0];
+    this.layer = map.createStaticLayer(name, tileset, 0, 0);
+    this.layer.setScale(SCALE);
 
+    // TODO: this.layer.resizeWorld();
     // TODO: this._collidables = scene.add.group('collidables', false, true, Phaser.Physics.ARCADE);
 
     this._loadLayerObjects(name);
 
     // TODO: this.layer.sendToBack();
+    this.layer.setDepth(0);
     this.scene.events.emit('onLayerLoaded');
+    console.log(`===== layer ${name} loaded!`);
 
     this.setupPhysics();
   }
 
   _loadLayerObjects(layerName) {
+    console.log(`===== loading layer objects for ${layerName}`);
     const SCALE = 3;
     const map = this.map;
     const game = this.game;
@@ -12334,11 +12352,13 @@ class LevelLoader {
     let properties = {};
     let x, y;
 
+    console.log(`===== found ${objectLayer.objects.length} objects in layer ${layerName}.`);
+    console.log(objectLayer.objects);
     for (let obj of objectLayer.objects) {
       properties = obj.properties || {};
 
       // TODO: get center of obj for placement.
-      console.log(obj.type, obj);
+      console.log(`===== Initializing object ${obj.type}.`, obj);
 
       x = obj.x * SCALE;
       y = obj.y * SCALE;

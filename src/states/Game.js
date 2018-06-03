@@ -16,14 +16,18 @@ export default class extends Phaser.Scene {
 
     this.loader = new LevelLoader(this);
     this.events.on('onLayerLoaded', () => {
+      console.log(`===== onLayerLoaded fired`)
+      console.log(`===== setting miner to position ${this.loader.playerStart.x}, ${this.loader.playerStart.y}`)
       this.miner.setPosition(this.loader.playerStart.x, this.loader.playerStart.y)
     });
 
     this.map = this.loader.loadMap('cave')
     this.loader.loadLayer('Overworld');
 
-    this.group = this.add.group();
-    this.group.add(this.miner);
+    debugger
+    this.add.existing(this.miner);
+    // this.group = this.add.group();
+    // this.group.add(this.miner);
 
     // for(var i=0; i < 500; i++) {
     //   this.group.addChild(Squirrel.createAtRandom(this.game));
@@ -88,11 +92,11 @@ export default class extends Phaser.Scene {
 
     this.miner.update();
 
-    this.group.children.each(function(s) {
-      if(s.active) {
-        s.update();
-      }
-    });
+    // this.group.children.each(function(s) {
+    //   if(s.active) {
+    //     s.update();
+    //   }
+    // });
     //this.group.sort('y', Phaser.Group.SORT_ASCENDING);
   }
 

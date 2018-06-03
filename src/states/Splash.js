@@ -20,9 +20,9 @@ export default class extends Phaser.Scene {
     Squirrel.preload(this);
     MineEntrance.preload(this);
 
-    this.load.spritesheet('blood',     'assets/blood.png', { frameWidth: 32, frameHeight: 32 });
+    this.load.spritesheet('blood', 'assets/blood.png', { frameWidth: 32, frameHeight: 32 });
 
-    this.load.image('confusion', 'assets/infusionsoft.png', 300, 300);
+    this.load.image('confusion',   'assets/infusionsoft.png', 300, 300);
 
     this.load.tilemapTiledJSON('cave', 'assets/levels/cave.json');
     this.load.image('cave', 'assets/levels/cave.png');
