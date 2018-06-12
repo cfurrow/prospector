@@ -49,7 +49,8 @@ export default class extends Phaser.Scene {
 
     if(this.spaceBar.isDown) {
       this.dog = this.physics.add.sprite(this.miner.x, this.miner.y, 'dog');
-      this.dog.scaleX = this.dog.scaleY = 3.0;
+      this.dog.scaleX = this.dog.scaleY = 2.0;
+      this.dog.flipX = !this.miner.flipX;
       this.dog.anims.play('dog-run', true);
     }
   }

@@ -4704,6 +4704,7 @@ module.exports = Math.scale || function scale(x, inLow, inHigh, outLow, outHigh)
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+
 class Miner {
   static get width() {
     return 72;
@@ -4731,6 +4732,10 @@ class Miner {
 
   get y() {
     return this._sprite.y;
+  }
+
+  get flipX() {
+    return this.sprite.flipX;
   }
 
   static preload(scene) {
@@ -12081,7 +12086,8 @@ const centerGameObjects = objects => {
 
     if (this.spaceBar.isDown) {
       this.dog = this.physics.add.sprite(this.miner.x, this.miner.y, 'dog');
-      this.dog.scaleX = this.dog.scaleY = 3.0;
+      this.dog.scaleX = this.dog.scaleY = 2.0;
+      this.dog.flipX = !this.miner.flipX;
       this.dog.anims.play('dog-run', true);
     }
   }

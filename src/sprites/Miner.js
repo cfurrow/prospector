@@ -1,3 +1,4 @@
+
 export default class Miner {
   static get width() {
     return 72;
@@ -27,13 +28,17 @@ export default class Miner {
     return this._sprite.y;
   }
 
+  get flipX() {
+    return this.sprite.flipX;
+  }
+
   static preload(scene) {
     scene.load.spritesheet('miner',           'assets/miner.png',           {frameWidth: Miner.width, frameHeight: Miner.height});
     scene.load.spritesheet('miner-with-gold', 'assets/miner-with-gold.png', {frameWidth: Miner.width, frameHeight: Miner.height});
   }
 
   constructor(scene, x, y) {
-    this._scene = scene;
+    this._scene  = scene;
     this._sprite = scene.physics.add.sprite(x, y, 'miner');
     this._sprite.scaleX = this._sprite.scaleY = this.scale;
     this._sprite.setCollideWorldBounds(true);
