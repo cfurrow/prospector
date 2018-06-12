@@ -4704,7 +4704,7 @@ module.exports = Math.scale || function scale(x, inLow, inHigh, outLow, outHigh)
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-class Miner extends Phaser.Physics.Arcade.Sprite {
+class Miner {
   static get width() {
     return 72;
   }
@@ -4713,167 +4713,88 @@ class Miner extends Phaser.Physics.Arcade.Sprite {
     return 72;
   }
 
-  constructor(scene, x, y) {
-    super(scene, x, y, 'miner');
+  get scene() {
+    return this._scene;
+  }
 
-    this.scaleX = this.scaleY = 3;
-    //this.anchor.set(0.5, 0.8);
-    //this.smoothed = false;
+  get sprite() {
+    return this._sprite;
+  }
 
-    this.controller = scene.input.keyboard.createCursorKeys();
-    this.controller.space = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+  get scale() {
+    return 3.0;
+  }
 
-    this.xWalkFrame = null;
-    this.yWalkFrame = null;
+  get x() {
+    return this._sprite.x;
+  }
 
-    this.depth = 1;
+  get y() {
+    return this._sprite.y;
   }
 
   static preload(scene) {
-    // spritesheet(key, url, frameWidth, frameHeight [, frameMax] [, margin] [, spacing] [, skipFrames])
     scene.load.spritesheet('miner', 'assets/miner.png', { frameWidth: Miner.width, frameHeight: Miner.height });
     scene.load.spritesheet('miner-with-gold', 'assets/miner-with-gold.png', { frameWidth: Miner.width, frameHeight: Miner.height });
   }
 
-  static get facing() {
-    return {
-      UP: 1,
-      RIGHT: 2,
-      DOWN: 4,
-      LEFT: 8
-    };
+  constructor(scene, x, y) {
+    this._scene = scene;
+    this._sprite = scene.physics.add.sprite(x, y, 'miner');
+    this._sprite.scaleX = this._sprite.scaleY = this.scale;
+    this._sprite.setCollideWorldBounds(true);
+
+    this.velocity = 200;
+    this.frameRate = 10;
+
+    this.scene.anims.create({
+      key: 'walk-right',
+      frames: this._scene.anims.generateFrameNumbers('miner', { frames: [2, 7, 12, 17, 22] }),
+      frameRate: this.frameRate,
+      repeat: -1
+    });
+
+    this._scene.anims.create({
+      key: 'walk-up',
+      frames: this._scene.anims.generateFrameNames('miner', { frames: [0, 5, 10, 15, 20] }),
+      frameRate: this.frameRate,
+      repeat: -1
+    });
+
+    this._scene.anims.create({
+      key: 'walk-down',
+      frames: this._scene.anims.generateFrameNames('miner', { frames: [4, 9, 14, 19, 24] }),
+      frameRate: this.frameRate,
+      repeat: -1
+    });
   }
 
-  static get action() {
-    return {
-      WALK: 1,
-      ATTACK: 2
-    };
+  moveLeft() {
+    this.sprite.setVelocityX(-this.velocity);
+    this.sprite.flipX = true;
+    this.sprite.anims.play('walk-right', true);
   }
 
-  update() {
-    var speed = 200;
-
-    if (this.controller.left.isDown) {
-      this.action = 'walk';
-      // TODO: use flip thing
-      this.scaleX = -Math.abs(this.scaleX);
-      // TODO
-      this.body.velocity.x = -speed;
-      this.xWalkFrame = this.xActionFrame = 'right';
-    } else if (this.controller.right.isDown) {
-      this.action = 'walk';
-      // TODO: use flip
-      this.scaleX = Math.abs(this.scaleX);
-      // TODO
-      this.body.velocity.x = speed;
-      this.xWalkFrame = this.xActionFrame = 'right';
-    } else {
-      this.xWalkFrame = null;
-      // TODO
-      this.body.velocity.x = 0;
-    }
-
-    if (this.controller.up.isDown) {
-      this.action = 'walk';
-      // TODO this.body.velocity.y = -speed;
-      this.yWalkFrame = this.yActionFrame = 'up';
-    } else if (this.controller.down.isDown) {
-      this.action = 'walk';
-      // TODO this.body.velocity.y = speed;
-      this.yWalkFrame = this.yActionFrame = 'down';
-    } else {
-      this.yWalkFrame = null;
-      //TODO this.body.velocity.y = 0;
-    }
-
-    if (!this._directionKeyIsDown()) {
-      this.action = null;
-    }
-
-    if (this.controller.space.isDown) {
-      //TODO his.body.velocity.x = 0;
-      //TODO this.body.velocity.y = 0;
-      this.action = 'attack';
-    }
-
-    this.animate();
+  moveRight() {
+    this.sprite.setVelocityX(this.velocity);
+    this.sprite.flipX = false;
+    this.sprite.anims.play('walk-right', true);
   }
 
-  _directionKeyIsDown() {
-    return this._leftRightIsDown() || this._upDownIsDown();
+  moveUp() {
+    this.sprite.setVelocityY(-this.velocity);
+    this.sprite.anims.play('walk-up', true);
   }
 
-  _leftRightIsDown() {
-    return this.controller.left.isDown || this.controller.right.isDown;
+  moveDown() {
+    this.sprite.setVelocityY(this.velocity);
+    this.sprite.anims.play('walk-down', true);
   }
 
-  _upDownIsDown() {
-    return this.controller.up.isDown || this.controller.down.isDown;
-  }
-
-  animate() {
-    var directionKey = [];
-    var animationKey = null;
-
-    if (this.action === null) {
-      this.anims.stop();
-      return;
-    }
-
-    if (this.yWalkFrame) {
-      directionKey.push(this.yWalkFrame);
-    }
-
-    if (this.xWalkFrame) {
-      directionKey.push(this.xWalkFrame);
-    }
-
-    if (this.action == 'attack') {
-      directionKey = this.animations.currentAnim.name.replace(/^(walk|attack)-/, '');
-    } else {
-      directionKey = directionKey.join('-');
-    }
-    animationKey = this.action + '-' + directionKey;
-
-    if (this.lastAnimationKey && this.lastAnimationKey == animationKey) {
-      console.log(`===== animationKey: ${animationKey}`);
-    } else {
-      this.lastAnimationKey = animationKey;
-    }
-    this.anims.play(animationKey);
-  }
-
-  create() {
-    //this.game.physics.arcade.enable(this);
-
-    this.anims.animationManager.create({ key: 'walk-up', frames: this.anims.animationManager.generateFrameNames('miner', { frames: [0, 5, 10, 15, 20] }), frameRate: 10, repeat: -1 });
-    this.anims.animationManager.create({ key: 'walk-up-right', frames: this.anims.animationManager.generateFrameNames('miner', { frames: [1, 6, 11, 16, 21] }), frameRate: 10, repeat: -1 });
-    this.anims.animationManager.create({ key: 'walk-right', frames: this.anims.animationManager.generateFrameNames('miner', { frames: [2, 7, 12, 17, 22] }), frameRate: 10, repeat: -1 });
-    this.anims.animationManager.create({ key: 'walk-down-right', frames: this.anims.animationManager.generateFrameNames('miner', { frames: [3, 8, 13, 18, 23] }), frameRate: 10, repeat: -1 });
-    this.anims.animationManager.create({ key: 'walk-down', frames: this.anims.animationManager.generateFrameNames('miner', { frames: [4, 9, 14, 19, 24] }), frameRate: 10, repeat: -1 });
-
-    this.anims.animationManager.create({ key: 'attack-up', frames: [25, 30, 35, 40, 45], frameRate: 10, repeat: -1 });
-    this.anims.animationManager.create({ key: 'attack-up-right', frames: [26, 31, 36, 41, 46], frameRate: 10, repeat: -1 });
-    this.anims.animationManager.create({ key: 'attack-right', frames: [27, 32, 37, 42, 47], frameRate: 10, repeat: -1 });
-    this.anims.animationManager.create({ key: 'attack-down-right', frames: [28, 33, 38, 43, 48], frameRate: 10, repeat: -1 });
-    this.anims.animationManager.create({ key: 'attack-down', frames: [29, 34, 39, 44, 49], frameRate: 10, repeat: -1 });
-
-    // TODO
-    //var hitboxes = this.scene.add.group();
-    //hitboxes.enableBody = true;
-    //this.addChild(hitboxes);
-
-    // this.axHitbox = hitboxes.create(20,-10,null);
-    // this.axHitbox.anchor.set(0.5,0.5);
-    // this.axHitbox.body.setSize(50,50,0,0);
-  }
-
-  setupPhysics() {
-    // TODO
-    // this.body.collideWorldBounds = true;
-    // this.body.allowDrag = true;
-    // this.body.setSize(Miner.width / this.scale.x, Miner.height / this.scale.y, Miner.width / this.scale.x, Miner.height / this.scale.y);
+  stop() {
+    this.sprite.anims.stop();
+    this.sprite.setVelocityX(0);
+    this.sprite.setVelocityY(0);
   }
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = Miner;
@@ -11317,7 +11238,6 @@ class Game extends __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Game {
     const width = docElement.clientWidth > __WEBPACK_IMPORTED_MODULE_4__config__["a" /* default */].gameWidth ? __WEBPACK_IMPORTED_MODULE_4__config__["a" /* default */].gameWidth : docElement.clientWidth;
     const height = docElement.clientHeight > __WEBPACK_IMPORTED_MODULE_4__config__["a" /* default */].gameHeight ? __WEBPACK_IMPORTED_MODULE_4__config__["a" /* default */].gameHeight : docElement.clientHeight;
 
-    debugger;
     super({
       type: __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.AUTO,
       width: width,
@@ -12121,109 +12041,52 @@ const centerGameObjects = objects => {
 /* harmony default export */ __webpack_exports__["a"] = (class extends __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Scene {
   init() {}
 
-  preload() {}
+  preload() {
+    this.load.image('jake', 'assets/jake.png');
+    this.load.spritesheet('dog', 'assets/dog_brown.png', { frameWidth: 45, frameHeight: 25 });
+  }
 
   create() {
-    this.miner = new __WEBPACK_IMPORTED_MODULE_1__sprites_Miner__["a" /* default */](this, 0, 0);
-    this.miner.create();
+    this.cursors = this.input.keyboard.createCursorKeys();
+    this.spaceBar = this.input.keyboard.addKey(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Input.Keyboard.KeyCodes.SPACE);
+    this.miner = new __WEBPACK_IMPORTED_MODULE_1__sprites_Miner__["a" /* default */](this, 400, 300);
 
-    this.loader = new __WEBPACK_IMPORTED_MODULE_5__LevelLoader__["a" /* default */](this);
-    this.events.on('onLayerLoaded', () => {
-      console.log(`===== onLayerLoaded fired`);
-      console.log(`===== setting miner to position ${this.loader.playerStart.x}, ${this.loader.playerStart.y}`);
-      this.miner.setPosition(this.loader.playerStart.x, this.loader.playerStart.y);
+    this.anims.create({
+      key: 'dog-run',
+      frames: this.anims.generateFrameNumbers('dog', { start: 0, end: 2 }),
+      frameRate: 10,
+      repeat: -1
     });
 
-    this.map = this.loader.loadMap('cave');
-    this.loader.loadLayer('Overworld');
+    //this.anims.create({})
 
-    this.physics.add.existing(this.miner);
-    // this.group = this.add.group();
-    // this.group.add(this.miner);
+    //this.miner.anims.play('walk-right');
 
-    // for(var i=0; i < 500; i++) {
-    //   this.group.addChild(Squirrel.createAtRandom(this.game));
-    // }
-    //this.group.sort();
-
-    this.blood = new __WEBPACK_IMPORTED_MODULE_3__sprites_Blood__["a" /* default */](this, 1, 1);
-
-    // this.confusion = this.game.add.sprite(50, 550, 'confusion');
-    // this.confusion.anchor.set(0.5, 0.5);
-    // this.confusion.scale.set(0.3, 0.3);
-    // this.confusion.addChild(this.blood);
-
-    // var confusionTween = this.game.add.tween(this.confusion);
-    // confusionTween.to({x: 750}, 5500, Phaser.Easing.Elastic.InOut, true, 0, -1, true);
-
-    //this.loader.setupPhysics();
-    this.miner.setupPhysics();
-    this.cameras.main.startFollow(this.miner);
-  }
-
-  mineSomeGold() {
-    //this.mine.frame = 1;
-    this.enterGoldMine.call(this);
-  }
-
-  enterGoldMine() {
-    //this.mine.kill();
-    //this.group.kill();
-    this.miner.position.set(550, 200);
-    this.layer.destroy();
-    this.layer = this.map.createLayer('Gold Mine');
-    this.map.setCollisionByExclusion([83, 84, 85, 99, 100, 101, 112, 113, 128, 129, 144, 145, 160, 161, 115, 131, 147, 148]);
-    this.layer.setScale(3);
-    this.layer.sendToBack();
-    this.layer.resizeWorld();
-  }
-
-  attackConfusion() {
-    if (!this.miner.attacking) {
-      this.blood.visible = false;
-      return;
-    }
-    this.blood.visible = true;
-    var bloodAnimation = this.blood.animations.getAnimation('squirt');
-    if (!bloodAnimation.isPlaying) {
-      this.blood.animations.play('squirt');
-    }
-  }
-
-  doCollision(a, b) {
-    b.collideWith(a);
+    //this.cameras.main.startFollow(this.miner);
   }
 
   update() {
-    var speed = 200;
-    //this.mine.frame = 0; // reset to "off"
 
-    // TODO
-    // this.game.physics.arcade.collide(this.miner, this.loader.collidables, this.doCollision, null, this);
-    // this.game.physics.arcade.collide(this.miner, this.layer);
+    if (this.cursors.left.isDown) {
+      this.miner.moveLeft();
+    } else if (this.cursors.right.isDown) {
+      this.miner.moveRight();
+    } else if (this.cursors.up.isDown) {
+      this.miner.moveUp();
+    } else if (this.cursors.down.isDown) {
+      this.miner.moveDown();
+    } else {
+      this.miner.stop();
+    }
 
-    this.miner.update();
-
-    // this.group.children.each(function(s) {
-    //   if(s.active) {
-    //     s.update();
-    //   }
-    // });
-    //this.group.sort('y', Phaser.Group.SORT_ASCENDING);
+    if (this.spaceBar.isDown) {
+      this.dog = this.physics.add.sprite(this.miner.x, this.miner.y, 'dog');
+      this.dog.scaleX = this.dog.scaleY = 3.0;
+      this.dog.anims.play('dog-run', true);
+    }
   }
 
-  render() {
-    // this.game.debug.body(this.miner);
-    // this.game.debug.spriteBounds(this.miner, 'pink', false);
-    // this.loader.collidables.forEach( (c) => {
-    //   this.game.debug.body(c);
-    //   this.game.debug.spriteBounds(c, 'pink', false);
-    // } )
-
-    //this.game.debug.body(this.mine);
-    //this.game.debug.body(this.axHitbox);
-    //this.layer.debug = true;
-  }
+  render() {}
 });
 
 /***/ }),
@@ -12232,7 +12095,6 @@ const centerGameObjects = objects => {
   !*** ./src/sprites/Blood.js ***!
   \******************************/
 /*! exports provided: default */
-/*! exports used: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12251,7 +12113,7 @@ class Blood extends Phaser.GameObjects.Sprite {
     };
   }
 }
-/* harmony export (immutable) */ __webpack_exports__["a"] = Blood;
+/* unused harmony export default */
 
 
 /***/ }),
@@ -12260,7 +12122,6 @@ class Blood extends Phaser.GameObjects.Sprite {
   !*** ./src/LevelLoader.js ***!
   \****************************/
 /*! exports provided: default */
-/*! exports used: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12342,7 +12203,7 @@ class LevelLoader {
     this._loadLayerObjects(name);
 
     // TODO: this.layer.sendToBack();
-    this.layer.setDepth(0);
+    this.layer.depth = 0;
     this.scene.events.emit('onLayerLoaded');
     console.log(`===== layer ${name} loaded!`);
 
@@ -12398,7 +12259,7 @@ class LevelLoader {
     //TODO: this.collidables.forEach( (c) => c.setupPhysics() )
   }
 }
-/* harmony export (immutable) */ __webpack_exports__["a"] = LevelLoader;
+/* unused harmony export default */
 
 
 /***/ }),

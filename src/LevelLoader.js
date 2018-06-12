@@ -73,7 +73,7 @@ export default class LevelLoader {
     this._loadLayerObjects(name)
 
     // TODO: this.layer.sendToBack();
-    this.layer.setDepth(0);
+    this.layer.depth = 0;
     this.scene.events.emit('onLayerLoaded');
     console.log(`===== layer ${name} loaded!`)
 
