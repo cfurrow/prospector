@@ -15,7 +15,6 @@ export default class extends Phaser.Scene {
   }
 
   create() {
-    this.cursors = this.input.keyboard.createCursorKeys();
     this.spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     this.miner = new Miner(this, 400, 300);
 
@@ -35,17 +34,7 @@ export default class extends Phaser.Scene {
 
   update() {
 
-    if(this.cursors.left.isDown) {
-      this.miner.moveLeft();
-    } else if(this.cursors.right.isDown) {
-      this.miner.moveRight();
-    } else if(this.cursors.up.isDown) {
-      this.miner.moveUp();
-    } else if(this.cursors.down.isDown) {
-      this.miner.moveDown();
-    } else {
-      this.miner.stop();
-    }
+    this.miner.update();
 
     if(this.spaceBar.isDown) {
       this.dog = this.physics.add.sprite(this.miner.x, this.miner.y, 'dog');

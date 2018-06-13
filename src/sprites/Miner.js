@@ -66,6 +66,22 @@ export default class Miner {
       frameRate: this.frameRate,
       repeat: -1
     });
+
+    this.cursors  = this._scene.input.keyboard.createCursorKeys();
+  }
+
+  update() {
+    if(this.cursors.left.isDown) {
+      this.moveLeft();
+    } else if(this.cursors.right.isDown) {
+      this.moveRight();
+    } else if(this.cursors.up.isDown) {
+      this.moveUp();
+    } else if(this.cursors.down.isDown) {
+      this.moveDown();
+    } else {
+      this.stop();
+    }
   }
 
   moveLeft() {

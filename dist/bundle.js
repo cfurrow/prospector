@@ -4772,6 +4772,22 @@ class Miner {
       frameRate: this.frameRate,
       repeat: -1
     });
+
+    this.cursors = this._scene.input.keyboard.createCursorKeys();
+  }
+
+  update() {
+    if (this.cursors.left.isDown) {
+      this.moveLeft();
+    } else if (this.cursors.right.isDown) {
+      this.moveRight();
+    } else if (this.cursors.up.isDown) {
+      this.moveUp();
+    } else if (this.cursors.down.isDown) {
+      this.moveDown();
+    } else {
+      this.stop();
+    }
   }
 
   moveLeft() {
@@ -12052,7 +12068,6 @@ const centerGameObjects = objects => {
   }
 
   create() {
-    this.cursors = this.input.keyboard.createCursorKeys();
     this.spaceBar = this.input.keyboard.addKey(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Input.Keyboard.KeyCodes.SPACE);
     this.miner = new __WEBPACK_IMPORTED_MODULE_1__sprites_Miner__["a" /* default */](this, 400, 300);
 
@@ -12072,17 +12087,7 @@ const centerGameObjects = objects => {
 
   update() {
 
-    if (this.cursors.left.isDown) {
-      this.miner.moveLeft();
-    } else if (this.cursors.right.isDown) {
-      this.miner.moveRight();
-    } else if (this.cursors.up.isDown) {
-      this.miner.moveUp();
-    } else if (this.cursors.down.isDown) {
-      this.miner.moveDown();
-    } else {
-      this.miner.stop();
-    }
+    this.miner.update();
 
     if (this.spaceBar.isDown) {
       this.dog = this.physics.add.sprite(this.miner.x, this.miner.y, 'dog');
