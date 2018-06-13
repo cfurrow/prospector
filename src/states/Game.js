@@ -1,6 +1,7 @@
 /* globals __DEV__ */
 import Phaser from 'phaser'
 import Miner from '../sprites/Miner'
+import Shepherd from '../sprites/Shepherd'
 import Squirrel from '../sprites/Squirrel'
 import Blood from '../sprites/Blood'
 import MineEntrance from '../sprites/MineEntrance'
@@ -10,8 +11,6 @@ export default class extends Phaser.Scene {
   init() {}
 
   preload() {
-    this.load.image('jake',      'assets/jake.png');
-    this.load.spritesheet('dog', 'assets/dog_brown.png', {frameWidth: 45, frameHeight: 25});
   }
 
   create() {
@@ -37,10 +36,8 @@ export default class extends Phaser.Scene {
     this.miner.update();
 
     if(this.spaceBar.isDown) {
-      this.dog = this.physics.add.sprite(this.miner.x, this.miner.y, 'dog');
-      this.dog.scaleX = this.dog.scaleY = 2.0;
-      this.dog.flipX = !this.miner.flipX;
-      this.dog.anims.play('dog-run', true);
+      this.dog = new Shepherd(this, this.miner.x, this.miner.y);
+      this.dog.sprite.flipX = !this.miner.flipX;
     }
   }
 

@@ -11978,8 +11978,10 @@ if (window.cordova) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_phaser___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_phaser__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils__ = __webpack_require__(/*! ../utils */ 1352);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__sprites_Miner__ = __webpack_require__(/*! ../sprites/Miner */ 533);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__sprites_Squirrel__ = __webpack_require__(/*! ../sprites/Squirrel */ 534);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__sprites_MineEntrance__ = __webpack_require__(/*! ../sprites/MineEntrance */ 281);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__sprites_Shepherd__ = __webpack_require__(/*! ../sprites/Shepherd */ 1359);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__sprites_Squirrel__ = __webpack_require__(/*! ../sprites/Squirrel */ 534);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__sprites_MineEntrance__ = __webpack_require__(/*! ../sprites/MineEntrance */ 281);
+
 
 
 
@@ -11999,9 +12001,11 @@ if (window.cordova) {
     // load your assets
     //
     __WEBPACK_IMPORTED_MODULE_2__sprites_Miner__["a" /* default */].preload(this);
-    __WEBPACK_IMPORTED_MODULE_3__sprites_Squirrel__["a" /* default */].preload(this);
-    __WEBPACK_IMPORTED_MODULE_4__sprites_MineEntrance__["a" /* default */].preload(this);
+    __WEBPACK_IMPORTED_MODULE_4__sprites_Squirrel__["a" /* default */].preload(this);
+    __WEBPACK_IMPORTED_MODULE_5__sprites_MineEntrance__["a" /* default */].preload(this);
+    __WEBPACK_IMPORTED_MODULE_3__sprites_Shepherd__["a" /* default */].preload(this);
 
+    this.load.spritesheet('dog', 'assets/dog_brown.png', { frameWidth: 45, frameHeight: 25 });
     this.load.spritesheet('blood', 'assets/blood.png', { frameWidth: 32, frameHeight: 32 });
 
     this.load.image('confusion', 'assets/infusionsoft.png', 300, 300);
@@ -12047,11 +12051,13 @@ const centerGameObjects = objects => {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_phaser__ = __webpack_require__(/*! phaser */ 123);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_phaser___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_phaser__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sprites_Miner__ = __webpack_require__(/*! ../sprites/Miner */ 533);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__sprites_Squirrel__ = __webpack_require__(/*! ../sprites/Squirrel */ 534);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__sprites_Blood__ = __webpack_require__(/*! ../sprites/Blood */ 1354);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__sprites_MineEntrance__ = __webpack_require__(/*! ../sprites/MineEntrance */ 281);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__LevelLoader__ = __webpack_require__(/*! ../LevelLoader */ 1355);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__sprites_Shepherd__ = __webpack_require__(/*! ../sprites/Shepherd */ 1359);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__sprites_Squirrel__ = __webpack_require__(/*! ../sprites/Squirrel */ 534);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__sprites_Blood__ = __webpack_require__(/*! ../sprites/Blood */ 1354);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__sprites_MineEntrance__ = __webpack_require__(/*! ../sprites/MineEntrance */ 281);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__LevelLoader__ = __webpack_require__(/*! ../LevelLoader */ 1355);
 /* globals __DEV__ */
+
 
 
 
@@ -12062,10 +12068,7 @@ const centerGameObjects = objects => {
 /* harmony default export */ __webpack_exports__["a"] = (class extends __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Scene {
   init() {}
 
-  preload() {
-    this.load.image('jake', 'assets/jake.png');
-    this.load.spritesheet('dog', 'assets/dog_brown.png', { frameWidth: 45, frameHeight: 25 });
-  }
+  preload() {}
 
   create() {
     this.spaceBar = this.input.keyboard.addKey(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Input.Keyboard.KeyCodes.SPACE);
@@ -12090,10 +12093,8 @@ const centerGameObjects = objects => {
     this.miner.update();
 
     if (this.spaceBar.isDown) {
-      this.dog = this.physics.add.sprite(this.miner.x, this.miner.y, 'dog');
-      this.dog.scaleX = this.dog.scaleY = 2.0;
-      this.dog.flipX = !this.miner.flipX;
-      this.dog.anims.play('dog-run', true);
+      this.dog = new __WEBPACK_IMPORTED_MODULE_2__sprites_Shepherd__["a" /* default */](this, this.miner.x, this.miner.y);
+      this.dog.sprite.flipX = !this.miner.flipX;
     }
   }
 
@@ -12324,6 +12325,84 @@ class Blocker extends Phaser.GameObjects.Sprite {
   gameHeight: 600,
   localStorageName: 'cf-prospector'
 });
+
+/***/ }),
+/* 1358 */,
+/* 1359 */
+/*!*********************************!*\
+  !*** ./src/sprites/Shepherd.js ***!
+  \*********************************/
+/*! exports provided: default */
+/*! exports used: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+class Shepherd {
+  get scene() {
+    return this._scene;
+  }
+
+  get sprite() {
+    return this._sprite;
+  }
+
+  static preload(scene) {
+    var basePath = 'assets/german-shepherd/x3/Shepherd_';
+
+    scene.load.image('shepherd-bark1', `${basePath}bark_1.png`);
+    scene.load.image('shepherd-bark2', `${basePath}bark_2.png`);
+    scene.load.image('shepherd-bark3', `${basePath}bark_3.png`);
+
+    scene.load.image('shepherd-default', `${basePath}default.png`);
+
+    scene.load.image('shepherd-run1', `${basePath}run_1.png`);
+    scene.load.image('shepherd-run2', `${basePath}run_2.png`);
+    scene.load.image('shepherd-run3', `${basePath}run_3.png`);
+    scene.load.image('shepherd-run4', `${basePath}run_4.png`);
+    scene.load.image('shepherd-run5', `${basePath}run_5.png`);
+
+    scene.load.image('shepherd-walk1', `${basePath}walk_1.png`);
+    scene.load.image('shepherd-walk2', `${basePath}walk_2.png`);
+    scene.load.image('shepherd-walk3', `${basePath}walk_3.png`);
+    scene.load.image('shepherd-walk4', `${basePath}walk_4.png`);
+    scene.load.image('shepherd-walk5', `${basePath}walk_5.png`);
+  }
+
+  constructor(scene, x, y) {
+    this._scene = scene;
+    window.theScene = scene;
+    let animationExists = false;
+
+    animationExists = scene.anims.get('shepherd-walk');
+
+    if (!animationExists) {
+      scene.anims.create({
+        key: 'shepherd-walk',
+        frames: [{ key: 'shepherd-walk1' }, { key: 'shepherd-walk2' }, { key: 'shepherd-walk3' }, { key: 'shepherd-walk4' }, { key: 'shepherd-walk5' }],
+        frameRate: 8,
+        repeat: -1
+      });
+    }
+
+    animationExists = scene.anims.get('shepherd-run');
+
+    if (!animationExists) {
+      scene.anims.create({
+        key: 'shepherd-run',
+        frames: [{ key: 'shepherd-run1' }, { key: 'shepherd-run2' }, { key: 'shepherd-run3' }, { key: 'shepherd-run4' }, { key: 'shepherd-run5' }],
+        frameRate: 8,
+        repeat: -1
+      });
+    }
+
+    this._sprite = scene.physics.add.sprite(x, y, 'shepherd-default');
+
+    let animationName = Phaser.Math.RND.pick(['shepherd-walk', 'shepherd-run']);
+    this._sprite.play(animationName);
+  }
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = Shepherd;
+
 
 /***/ })
 ],[535]);

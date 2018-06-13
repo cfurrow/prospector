@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 import { centerGameObjects } from '../utils'
 import Miner from '../sprites/Miner'
+import Shepherd from '../sprites/Shepherd'
 import Squirrel from '../sprites/Squirrel'
 import MineEntrance from '../sprites/MineEntrance'
 
@@ -19,7 +20,9 @@ export default class extends Phaser.Scene {
     Miner.preload(this);
     Squirrel.preload(this);
     MineEntrance.preload(this);
+    Shepherd.preload(this);
 
+    this.load.spritesheet('dog', 'assets/dog_brown.png', {frameWidth: 45, frameHeight: 25});
     this.load.spritesheet('blood', 'assets/blood.png', { frameWidth: 32, frameHeight: 32 });
 
     this.load.image('confusion',   'assets/infusionsoft.png', 300, 300);
