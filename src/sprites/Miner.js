@@ -33,7 +33,7 @@ export default class Miner {
   }
 
   static preload(scene) {
-    scene.load.spritesheet('miner',           'assets/miner.png',           {frameWidth: Miner.width, frameHeight: Miner.height});
+    scene.load.spritesheet('miner', 'assets/miner.png', { frameWidth: Miner.width, frameHeight: Miner.height });
     scene.load.spritesheet('miner-with-gold', 'assets/miner-with-gold.png', {frameWidth: Miner.width, frameHeight: Miner.height});
   }
 

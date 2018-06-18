@@ -16,6 +16,7 @@ export default class extends Phaser.Scene {
   create() {
     this.spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     this.miner = new Miner(this, 400, 300);
+    this.placeDog = false;
 
     this.anims.create({
       key: 'dog-run',
@@ -32,12 +33,14 @@ export default class extends Phaser.Scene {
   }
 
   update() {
-
     this.miner.update();
 
     if(this.spaceBar.isDown) {
+      this.placeDog = true;
+    } else if (this.spaceBar.isUp && this.placeDog) {
       this.dog = new Shepherd(this, this.miner.x, this.miner.y);
       this.dog.sprite.flipX = !this.miner.flipX;
+      this.placeDog = false;
     }
   }
 
