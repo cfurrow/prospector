@@ -4743,6 +4743,31 @@ class Miner {
     scene.load.spritesheet('miner-with-gold', 'assets/miner-with-gold.png', { frameWidth: Miner.width, frameHeight: Miner.height });
   }
 
+  static create(scene) {
+    var frameRate = 10;
+
+    scene.anims.create({
+      key: 'walk-right',
+      frames: scene.anims.generateFrameNumbers('miner', { frames: [2, 7, 12, 17, 22] }),
+      frameRate: frameRate,
+      repeat: -1
+    });
+
+    scene.anims.create({
+      key: 'walk-up',
+      frames: scene.anims.generateFrameNames('miner', { frames: [0, 5, 10, 15, 20] }),
+      frameRate: frameRate,
+      repeat: -1
+    });
+
+    scene.anims.create({
+      key: 'walk-down',
+      frames: scene.anims.generateFrameNames('miner', { frames: [4, 9, 14, 19, 24] }),
+      frameRate: frameRate,
+      repeat: -1
+    });
+  }
+
   constructor(scene, x, y) {
     this._scene = scene;
     this._sprite = scene.physics.add.sprite(x, y, 'miner');
@@ -4750,28 +4775,6 @@ class Miner {
     this._sprite.setCollideWorldBounds(true);
 
     this.velocity = 200;
-    this.frameRate = 10;
-
-    this.scene.anims.create({
-      key: 'walk-right',
-      frames: this._scene.anims.generateFrameNumbers('miner', { frames: [2, 7, 12, 17, 22] }),
-      frameRate: this.frameRate,
-      repeat: -1
-    });
-
-    this._scene.anims.create({
-      key: 'walk-up',
-      frames: this._scene.anims.generateFrameNames('miner', { frames: [0, 5, 10, 15, 20] }),
-      frameRate: this.frameRate,
-      repeat: -1
-    });
-
-    this._scene.anims.create({
-      key: 'walk-down',
-      frames: this._scene.anims.generateFrameNames('miner', { frames: [4, 9, 14, 19, 24] }),
-      frameRate: this.frameRate,
-      repeat: -1
-    });
 
     this.cursors = this._scene.input.keyboard.createCursorKeys();
   }
@@ -12148,6 +12151,8 @@ const centerGameObjects = objects => {
   preload() {}
 
   create() {
+    __WEBPACK_IMPORTED_MODULE_1__sprites_Miner__["a" /* default */].create(this);
+
     this.spaceBar = this.input.keyboard.addKey(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Input.Keyboard.KeyCodes.SPACE);
     this.miner = new __WEBPACK_IMPORTED_MODULE_1__sprites_Miner__["a" /* default */](this, 400, 300);
     this.placeDog = false;
@@ -12158,8 +12163,6 @@ const centerGameObjects = objects => {
       frameRate: 10,
       repeat: -1
     });
-
-    //this.anims.create({})
 
     //this.miner.anims.play('walk-right');
 

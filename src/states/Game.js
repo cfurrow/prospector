@@ -14,6 +14,8 @@ export default class extends Phaser.Scene {
   }
 
   create() {
+    Miner.create(this);
+    
     this.spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     this.miner = new Miner(this, 400, 300);
     this.placeDog = false;
@@ -23,9 +25,7 @@ export default class extends Phaser.Scene {
       frames: this.anims.generateFrameNumbers('dog', { start: 0, end: 2 }),
       frameRate: 10,
       repeat: -1
-    })
-
-    //this.anims.create({})
+    });
 
     //this.miner.anims.play('walk-right');
 
