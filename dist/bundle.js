@@ -12201,6 +12201,10 @@ const centerGameObjects = objects => {
   preload() {}
 
   create() {
+    let loader = new __WEBPACK_IMPORTED_MODULE_6__LevelLoader__["a" /* default */](this);
+    loader.loadMap('cave');
+    loader.loadLayer('Overworld');
+
     __WEBPACK_IMPORTED_MODULE_1__sprites_Miner__["a" /* default */].create(this);
 
     this.spaceBar = this.input.keyboard.addKey(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Input.Keyboard.KeyCodes.SPACE);
@@ -12263,6 +12267,7 @@ class Blood extends Phaser.GameObjects.Sprite {
   !*** ./src/LevelLoader.js ***!
   \****************************/
 /*! exports provided: default */
+/*! exports used: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12336,7 +12341,7 @@ class LevelLoader {
 
     tileset = map.tilesets[0];
     this.layer = map.createStaticLayer(name, tileset, 0, 0);
-    this.layer.setScale(SCALE);
+    this.layer.scaleX = this.layer.scaleY = SCALE;
 
     // TODO: this.layer.resizeWorld();
     // TODO: this._collidables = scene.add.group('collidables', false, true, Phaser.Physics.ARCADE);
@@ -12400,7 +12405,7 @@ class LevelLoader {
     //TODO: this.collidables.forEach( (c) => c.setupPhysics() )
   }
 }
-/* unused harmony export default */
+/* harmony export (immutable) */ __webpack_exports__["a"] = LevelLoader;
 
 
 /***/ }),

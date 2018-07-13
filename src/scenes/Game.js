@@ -14,6 +14,10 @@ export default class extends Phaser.Scene {
   }
 
   create() {
+    let loader = new LevelLoader(this);
+    loader.loadMap('cave');
+    loader.loadLayer('Overworld');
+    
     Miner.create(this);
 
     this.spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -26,6 +30,8 @@ export default class extends Phaser.Scene {
       frameRate: 10,
       repeat: -1
     });
+
+
   }
 
   update() {

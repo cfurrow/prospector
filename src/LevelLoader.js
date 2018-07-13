@@ -65,7 +65,7 @@ export default class LevelLoader {
 
     tileset = map.tilesets[0];
     this.layer = map.createStaticLayer(name, tileset, 0, 0);
-    this.layer.setScale(SCALE);
+    this.layer.scaleX = this.layer.scaleY = SCALE;
 
     // TODO: this.layer.resizeWorld();
     // TODO: this._collidables = scene.add.group('collidables', false, true, Phaser.Physics.ARCADE);
