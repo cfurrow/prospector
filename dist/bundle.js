@@ -12141,7 +12141,7 @@ if (window.cordova) {
     this.load.image('confusion', 'assets/infusionsoft.png', 300, 300);
 
     this.load.tilemapTiledJSON('cave', 'assets/levels/cave.json');
-    this.load.image('cave', 'assets/levels/cave.png');
+    this.load.image('cave', 'assets/levels/caveExtruded.png');
     // this.game.load.image('grass', 'assets/levels/grass.png');
     // this.game.load.image('grass2', 'assets/levels/grass2.png');
   }
@@ -12310,6 +12310,7 @@ class LevelLoader {
   }
 
   loadMap(name) {
+    // name, tileWidth, tileHeight, width, height, data, insertNull
     this._map = this.scene.add.tilemap(name);
     this._loadTilesetsFromCache();
 
@@ -12320,7 +12321,7 @@ class LevelLoader {
     this.map.tilesets.forEach(ts => {
       const name = ts.name;
       // tilesetName, key
-      this._map.addTilesetImage(name, name);
+      this._map.addTilesetImage(name, name, 18, 18);
     });
   }
 

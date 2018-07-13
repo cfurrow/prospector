@@ -34,6 +34,7 @@ export default class LevelLoader {
   }
 
   loadMap(name) {
+    // name, tileWidth, tileHeight, width, height, data, insertNull
     this._map = this.scene.add.tilemap(name);
     this._loadTilesetsFromCache()
 
@@ -44,7 +45,7 @@ export default class LevelLoader {
     this.map.tilesets.forEach( (ts) => {
       const name = ts.name
       // tilesetName, key
-      this._map.addTilesetImage(name, name);
+      this._map.addTilesetImage(name, name, 18, 18);
     })
   }
 
