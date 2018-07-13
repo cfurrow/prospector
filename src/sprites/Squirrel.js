@@ -1,10 +1,10 @@
-export default class Squirrel extends Phaser.GameObjects.Sprite {
-  constructor(game, x, y) {
-    super(game, x, y, 'squirrel')
-    this.scale.set(2,2);
-    this.anchor.set(0.5, 1);
-    this.smoothed = false;
-
+export default class Squirrel extends Phaser.Physics.Arcade.Sprite {
+  constructor(scene, x, y) {
+    super(game, x, y, 'squirrel', 0)
+    
+    this.scaleX = this.scaleY = 2;
+    this.setOrigin(0.5, 1);
+  
     this.animations.add('idle', [0,1,2,3,4,5,6,7], 10, true);
     this.animations.add('run', [32,33,34], 7, true);
     this.animations.play('run');

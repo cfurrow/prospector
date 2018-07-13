@@ -4911,12 +4911,12 @@ class Shepherd {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-class Squirrel extends Phaser.GameObjects.Sprite {
-  constructor(game, x, y) {
-    super(game, x, y, 'squirrel');
-    this.scale.set(2, 2);
-    this.anchor.set(0.5, 1);
-    this.smoothed = false;
+class Squirrel extends Phaser.Physics.Arcade.Sprite {
+  constructor(scene, x, y) {
+    super(game, x, y, 'squirrel', 0);
+
+    this.scaleX = this.scaleY = 2;
+    this.setOrigin(0.5, 1);
 
     this.animations.add('idle', [0, 1, 2, 3, 4, 5, 6, 7], 10, true);
     this.animations.add('run', [32, 33, 34], 7, true);
@@ -12163,10 +12163,6 @@ const centerGameObjects = objects => {
       frameRate: 10,
       repeat: -1
     });
-
-    //this.miner.anims.play('walk-right');
-
-    //this.cameras.main.startFollow(this.miner);
   }
 
   update() {
