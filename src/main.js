@@ -1,8 +1,8 @@
 import Phaser from 'phaser'
 
-import BootState from './states/Boot'
-import SplashState from './states/Splash'
-import GameState from './states/Game'
+import BootScene from './scenes/Boot'
+import SplashScene from './scenes/Splash'
+import GameScene from './scenes/Game'
 
 import config from './config'
 
@@ -21,9 +21,9 @@ class Game extends Phaser.Game {
       }
     });
 
-    this.scene.add('Boot', BootState, false)
-    this.scene.add('Splash', SplashState, false)
-    this.scene.add('Game', GameState, false)
+    this.scene.add('Boot', BootScene, false)
+    this.scene.add('Splash', SplashScene, false)
+    this.scene.add('Game', GameScene, false)
 
     // with Cordova with need to wait that the device is ready so we will call the Boot state in another file
     if (!window.cordova) {

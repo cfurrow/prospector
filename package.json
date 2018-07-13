@@ -36,6 +36,6 @@
     "@capacitor/cli": "^1.0.0-alpha.33",
     "@capacitor/core": "^1.0.0-alpha.33",
     "@capacitor/ios": "^1.0.0-alpha.33",
-    "phaser": "3.3.0"
+    "phaser": "3.10.1"
   }
 }
