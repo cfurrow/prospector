@@ -55,8 +55,36 @@ export default class Miner {
     });
 
     scene.anims.create({
+      key: 'walk-up-right',
+      frames: scene.anims.generateFrameNames('miner', {frames: [1,6,11,16,21]}),
+      frameRate: frameRate,
+      repeat: -1
+    });
+
+    scene.anims.create({
+      key: 'walk-up-left',
+      frames: scene.anims.generateFrameNames('miner', {frames: [1,6,11,16,21]}),
+      frameRate: frameRate,
+      repeat: -1
+    });
+
+    scene.anims.create({
       key: 'walk-down',
       frames: scene.anims.generateFrameNames('miner', {frames: [4, 9, 14, 19, 24]}),
+      frameRate: frameRate,
+      repeat: -1
+    });
+
+    scene.anims.create({
+      key: 'walk-down-right',
+      frames: scene.anims.generateFrameNames('miner', {frames: [3, 8, 13, 18, 23]}),
+      frameRate: frameRate,
+      repeat: -1
+    });
+
+    scene.anims.create({
+      key: 'walk-down-left',
+      frames: scene.anims.generateFrameNames('miner', {frames: [3, 8, 13, 18, 23]}),
       frameRate: frameRate,
       repeat: -1
     });
@@ -69,49 +97,121 @@ export default class Miner {
     this._sprite.setCollideWorldBounds(true);
 
     this.velocity  = 200;
-    
+
     this.cursors  = this._scene.input.keyboard.createCursorKeys();
+
+    this.xWalkFrame = null;
+    this.yWalkFrame = null;
   }
 
   update() {
+    // if(this.cursors.left.isDown) {
+    //   this.moveLeft();
+    // } else if(this.cursors.right.isDown) {
+    //   this.moveRight();
+    // } else if(this.cursors.up.isDown) {
+    //   this.moveUp();
+    // } else if(this.cursors.down.isDown) {
+    //   this.moveDown();
+    // } else {
+    //   this.stop();
+    // }
+
     if(this.cursors.left.isDown) {
+      this.action = 'walk';
       this.moveLeft();
+      this.xWalkFrame = this.xActionFrame = 'right';
     } else if(this.cursors.right.isDown) {
+      this.action = 'walk';
       this.moveRight();
-    } else if(this.cursors.up.isDown) {
+      this.xWalkFrame = this.xActionFrame = 'right';
+    } else {
+      this.xWalkFrame = null;
+      this.sprite.setVelocityX(0);
+    }
+
+    if(this.cursors.up.isDown) {
+      this.action = 'walk';
       this.moveUp();
-    } else if(this.cursors.down.isDown) {
+      this.yWalkFrame = this.yActionFrame = 'up';
+    }else if(this.cursors.down.isDown) {
+      this.action = 'walk';
+      this.yWalkFrame = this.yActionFrame = 'down';
       this.moveDown();
     } else {
-      this.stop();
+      this.yWalkFrame = null;
+      this.sprite.setVelocityY(0);
     }
+
+    if(!this._directionKeyIsDown()) {
+      this.action = null;
+    }
+
+    // if(this.controller.space.isDown) {
+    //   this.body.velocity.x = 0;
+    //   this.body.velocity.y = 0;
+    //   this.action = 'attack';
+    // }
+
+    this.animate();
   }
 
   moveLeft() {
     this.sprite.setVelocityX(-this.velocity);
     this.sprite.flipX = true;
-    this.sprite.anims.play('walk-right', true);
   }
 
   moveRight() {
     this.sprite.setVelocityX(this.velocity);
     this.sprite.flipX = false;
-    this.sprite.anims.play('walk-right', true);
   }
 
   moveUp() {
     this.sprite.setVelocityY(-this.velocity);
-    this.sprite.anims.play('walk-up', true);
   }
 
   moveDown() {
     this.sprite.setVelocityY(this.velocity);
-    this.sprite.anims.play('walk-down', true);
   }
 
   stop() {
     this.sprite.anims.stop();
     this.sprite.setVelocityX(0);
     this.sprite.setVelocityY(0);
+  }
+
+  animate() {
+    let directionKey = [];
+    let animationKey = null
+
+    if(this.action === null) {
+      this.sprite.anims.stop();
+      return;
+    }
+
+    if(this.yWalkFrame) {
+      directionKey.push(this.yWalkFrame);
+    }
+
+    if(this.xWalkFrame) {
+      directionKey.push(this.xWalkFrame);
+    }
+
+    if(this.action == 'attack') {
+      //directionKey = this.animations.currentAnim.name.replace(/^(walk|attack)-/, '');
+    } else {
+      directionKey = directionKey.join('-');
+    }
+    animationKey = this.action + '-' + directionKey;
+
+    console.log(`Playing animation ${animationKey}`)
+    this.sprite.anims.play(animationKey, true);
+  }
+
+  _directionKeyIsDown() {
+    return this.cursors.up.isDown ||
+      this.cursors.down.isDown ||
+      this.cursors.left.isDown ||
+      this.cursors.right.isDown;
   }
 }

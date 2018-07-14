@@ -69,6 +69,14 @@ export default class LevelLoader {
     this.layer.scaleX = this.layer.scaleY = SCALE;
 
     // TODO: this.layer.resizeWorld();
+    let bounds = {
+      x: -this.layer.width,
+      y: -this.layer.height,
+      width: this.layer.width*SCALE + this.layer.width,
+      height: this.layer.height*SCALE + this.layer.height
+    };
+    console.log(`=== Setting camera bounds to ${JSON.stringify(bounds)}`)
+    this.scene.cameras.main.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
     // TODO: this._collidables = scene.add.group('collidables', false, true, Phaser.Physics.ARCADE);
 
     this._loadLayerObjects(name)
