@@ -4344,6 +4344,8 @@ class Miner extends Phaser.Sprite {
     this.axHitbox.body.setSize(50, 50, 0, 0);
 
     this.setupPhysics();
+
+    this.z = 10;
   }
 
   static preload(game) {
@@ -4483,8 +4485,7 @@ class Squirrel extends Phaser.Sprite {
     this.animations.play('run');
 
     this.lastChange = 0;
-    //game.physics.arcade.enable(this);
-    //this.body.collideWorldBounds = true;
+    this.z = 9;
   }
 
   static preload() {
@@ -11115,7 +11116,8 @@ const centerGameObjects = objects => {
     //this.squirrels = this.game.add.physicsGroup(Phaser.Physics.ARCADE);
     //this.game.add.group(parent, name, addToStage, enableBody, physicsBodyType);
     this.squirrels = this.game.add.group(this.game.world, 'jfjfjfjf', false, true, __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Physics.ARCADE);
-    //this.squirrels.addChild(this.miner);
+
+    this.squirrels.addChild(this.miner);
 
     for (var i = 0; i < 100; i++) {
       this.squirrels.add(__WEBPACK_IMPORTED_MODULE_2__sprites_Squirrel__["a" /* default */].createAtRandom(this.game));
@@ -11159,9 +11161,17 @@ const centerGameObjects = objects => {
     b.collideWith(a);
   }
 
-  collisionHandler(miner, squirrel) {
-    console.log("killll", squirrel);
-    squirrel.kill();
+  squirrelKill(miner, squirrel) {
+    if (miner.action == 'attack') {
+      var blood = new __WEBPACK_IMPORTED_MODULE_3__sprites_Blood__["a" /* default */](this.game, squirrel.position.x, squirrel.position.y);
+      this.squirrels.add(blood);
+      var bloodAnimation = blood.animations.getAnimation('squirt');
+
+      blood.visible = true;
+
+      blood.animations.play('squirt');
+      squirrel.kill();
+    }
   }
 
   update() {
@@ -11171,22 +11181,19 @@ const centerGameObjects = objects => {
     this.game.physics.arcade.collide(this.miner, this.loader.collidables, this.doCollision, null, this);
     this.game.physics.arcade.collide(this.miner, this.layer);
 
-    this.game.physics.arcade.overlap(this.miner, this.squirrels, this.collisionHandler, null, this);
-    this.game.physics.arcade.overlap(this.squirrels, undefined, this.collisionHandler);
+    this.game.physics.arcade.overlap(this.miner, this.squirrels, this.squirrelKill, null, this);
 
     this.miner.update();
 
     this.squirrels.forEachAlive(function (s) {
       s.update();
     });
-    //this.squirrels.sort('y', Phaser.Group.SORT_ASCENDING);
+    this.squirrels.sort('y', __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Group.SORT_ASCENDING);
   }
 
   render() {
-    this.game.debug.body(this.miner);
-    this.squirrels.forEachAlive(function (s) {
-      self.game.debug.body(s);
-    });
+    // this.game.debug.body(this.miner);
+    // this.squirrels.forEachAlive(function(s){ self.game.debug.body(s); });
 
     //var self = this;
     // this.game.debug.spriteBounds(this.miner, 'pink', false);
@@ -11207,6 +11214,7 @@ const centerGameObjects = objects => {
   !*** ./src/sprites/Blood.js ***!
   \******************************/
 /*! exports provided: default */
+/*! exports used: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11215,17 +11223,17 @@ class Blood extends Phaser.Sprite {
     super(game, x, y, 'blood');
 
     this.visible = false;
-    this.scale.set(6, 6);
+    this.scale.set(1, 1);
     this.anchor.set(0.5, 0.5);
     this.smoothed = false;
+    this.z = 0;
 
-    var bloodAnimation = this.animations.add('squirt', [0, 5, 10], 5, false);
-    bloodAnimation.onComplete.add(function (sprite, animation) {
-      sprite.visible = false;
-    }, this);
+    var bloodAnimation = this.animations.add('squirt', [0, 5, 10], 10, false);
+
+    // /bloodAnimation.onComplete.add(function(sprite, animation){ sprite.visible=false; }, this);
   }
 }
-/* unused harmony export default */
+/* harmony export (immutable) */ __webpack_exports__["a"] = Blood;
 
 
 /***/ }),

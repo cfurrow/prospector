@@ -27,7 +27,8 @@ export default class extends Phaser.State {
     //this.squirrels = this.game.add.physicsGroup(Phaser.Physics.ARCADE);
     //this.game.add.group(parent, name, addToStage, enableBody, physicsBodyType);
     this.squirrels = this.game.add.group(this.game.world, 'jfjfjfjf', false, true, Phaser.Physics.ARCADE);
-    //this.squirrels.addChild(this.miner);
+
+    this.squirrels.addChild(this.miner);
 
     for(var i=0; i < 100; i++) {
       this.squirrels.add(Squirrel.createAtRandom(this.game));
@@ -71,9 +72,17 @@ export default class extends Phaser.State {
     b.collideWith(a);
   }
 
-  collisionHandler(miner, squirrel) {
-    console.log("killll", squirrel);
-    squirrel.kill();
+  squirrelKill(miner, squirrel) {
+    if(miner.action=='attack') {
+      var blood = new Blood(this.game, squirrel.position.x, squirrel.position.y)
+      this.squirrels.add(blood);
+      var bloodAnimation = blood.animations.getAnimation('squirt');
+
+      blood.visible = true;
+
+      blood.animations.play('squirt');
+      squirrel.kill();
+    }
   }
 
   update() {
@@ -83,18 +92,17 @@ export default class extends Phaser.State {
     this.game.physics.arcade.collide(this.miner, this.loader.collidables, this.doCollision, null, this);
     this.game.physics.arcade.collide(this.miner, this.layer);
 
-    this.game.physics.arcade.overlap(this.miner, this.squirrels, this.collisionHandler, null, this)
-    this.game.physics.arcade.overlap(this.squirrels, undefined, this.collisionHandler);
+    this.game.physics.arcade.overlap(this.miner, this.squirrels, this.squirrelKill, null, this)
 
     this.miner.update();
 
     this.squirrels.forEachAlive(function(s){ s.update(); });
-    //this.squirrels.sort('y', Phaser.Group.SORT_ASCENDING);
+    this.squirrels.sort('y', Phaser.Group.SORT_ASCENDING);
   }
 
   render () {
-    this.game.debug.body(this.miner);
-    this.squirrels.forEachAlive(function(s){ self.game.debug.body(s); });
+    // this.game.debug.body(this.miner);
+    // this.squirrels.forEachAlive(function(s){ self.game.debug.body(s); });
 
     //var self = this;
     // this.game.debug.spriteBounds(this.miner, 'pink', false);

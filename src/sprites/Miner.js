@@ -42,6 +42,8 @@ export default class Miner extends Phaser.Sprite {
     this.axHitbox.body.setSize(50,50,0,0);
 
     this.setupPhysics();
+
+    this.z = 10;
   }
 
   static preload(game) {

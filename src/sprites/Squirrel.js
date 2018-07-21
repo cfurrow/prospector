@@ -10,8 +10,7 @@ export default class Squirrel extends Phaser.Sprite {
     this.animations.play('run');
 
     this.lastChange = 0;
-    //game.physics.arcade.enable(this);
-    //this.body.collideWorldBounds = true;
+    this.z = 9
   }
 
   static preload() {
