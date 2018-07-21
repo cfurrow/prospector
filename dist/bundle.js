@@ -4320,10 +4320,34 @@ class Miner extends Phaser.Sprite {
 
     this.xWalkFrame = null;
     this.yWalkFrame = null;
+
+    this.game.physics.arcade.enable(this);
+
+    this.animations.add('walk-up', [0, 5, 10, 15, 20], 10, true);
+    this.animations.add('walk-up-right', [1, 6, 11, 16, 21], 10, true);
+    this.animations.add('walk-right', [2, 7, 12, 17, 22], 10, true);
+    this.animations.add('walk-down-right', [3, 8, 13, 18, 23], 10, true);
+    this.animations.add('walk-down', [4, 9, 14, 19, 24], 10, true);
+
+    this.animations.add('attack-up', [25, 30, 35, 40, 45], 10, true);
+    this.animations.add('attack-up-right', [26, 31, 36, 41, 46], 10, true);
+    this.animations.add('attack-right', [27, 32, 37, 42, 47], 10, true);
+    this.animations.add('attack-down-right', [28, 33, 38, 43, 48], 10, true);
+    this.animations.add('attack-down', [29, 34, 39, 44, 49], 10, true);
+
+    // this.axHitbox = this.game.add.sprite(20,-25);
+    // this.axHitbox.anchor.set(0.5,0.5);
+    // this.game.physics.arcade.enable(this.axHitbox);
+    // this.axHitbox.body.setSize(50,50,0,0);
+    // this.addChild(this.axHitbox);
+
+    this.setupPhysics();
+
+    this.z = 10;
   }
 
   static preload(game) {
-    // spritesheet(key, url, frameWidth, frameHeight [, frameMax] [, margin] [, spacing] [, skipFrames]) 
+    // spritesheet(key, url, frameWidth, frameHeight [, frameMax] [, margin] [, spacing] [, skipFrames])
     //game.load.spritesheet('miner', 'assets/miner.png', Miner.width, Miner.height, 65, 0);
     game.load.spritesheet('miner', 'assets/miner.png', Miner.width, Miner.height);
     game.load.spritesheet('miner-with-gold', 'assets/miner-with-gold.png', Miner.width, Miner.height);
@@ -4428,30 +4452,6 @@ class Miner extends Phaser.Sprite {
     this.animations.play(animationKey);
   }
 
-  create() {
-    this.game.physics.arcade.enable(this);
-
-    this.animations.add('walk-up', [0, 5, 10, 15, 20], 10, true);
-    this.animations.add('walk-up-right', [1, 6, 11, 16, 21], 10, true);
-    this.animations.add('walk-right', [2, 7, 12, 17, 22], 10, true);
-    this.animations.add('walk-down-right', [3, 8, 13, 18, 23], 10, true);
-    this.animations.add('walk-down', [4, 9, 14, 19, 24], 10, true);
-
-    this.animations.add('attack-up', [25, 30, 35, 40, 45], 10, true);
-    this.animations.add('attack-up-right', [26, 31, 36, 41, 46], 10, true);
-    this.animations.add('attack-right', [27, 32, 37, 42, 47], 10, true);
-    this.animations.add('attack-down-right', [28, 33, 38, 43, 48], 10, true);
-    this.animations.add('attack-down', [29, 34, 39, 44, 49], 10, true);
-
-    var hitboxes = this.game.add.group();
-    hitboxes.enableBody = true;
-    this.addChild(hitboxes);
-
-    this.axHitbox = hitboxes.create(20, -10, null);
-    this.axHitbox.anchor.set(0.5, 0.5);
-    this.axHitbox.body.setSize(50, 50, 0, 0);
-  }
-
   setupPhysics() {
     this.body.collideWorldBounds = true;
     this.body.allowDrag = true;
@@ -4483,8 +4483,7 @@ class Squirrel extends Phaser.Sprite {
     this.animations.play('run');
 
     this.lastChange = 0;
-    game.physics.arcade.enable(this);
-    this.collideWorldBounds = true;
+    this.z = 9;
   }
 
   static preload() {
@@ -4495,17 +4494,18 @@ class Squirrel extends Phaser.Sprite {
     var rnd = game.rnd;
     var x = rnd.between(0, game.world.width);
     var y = rnd.between(0, game.world.height);
+
     var squirrel = new Squirrel(game, x, y);
-    game.add.existing(squirrel);
     return squirrel;
   }
 
   update() {
-    var speed = 4;
+    var speed = 300;
 
     var i = this.game.rnd.integerInRange(0, 100);
     var now = this.game.time.now;
     var lastChangeDiff = now - this.lastChange;
+
     if (lastChangeDiff > this.game.rnd.between(300, 1200)) {
       this.lastChange = this.game.time.now;
       if (i < 33) {
@@ -4521,14 +4521,15 @@ class Squirrel extends Phaser.Sprite {
     }
 
     if (this.movingRight) {
-      this.position.x += speed;
+      this.body.velocity.x = speed;
       this.scale.x = Math.abs(this.scale.x);
       this.animations.play('run');
     } else if (this.movingLeft) {
       this.scale.x = -Math.abs(this.scale.x);
-      this.position.x -= speed;
+      this.body.velocity.x = -speed;
       this.animations.play('run');
     } else {
+      this.body.velocity.x = 0;
       this.animations.play('idle');
     }
   }
@@ -10885,11 +10886,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_p2___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_p2__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_phaser__ = __webpack_require__(/*! phaser */ 50);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_phaser___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_phaser__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__states_Boot__ = __webpack_require__(/*! ./states/Boot */ 339);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__states_Splash__ = __webpack_require__(/*! ./states/Splash */ 340);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__states_Game__ = __webpack_require__(/*! ./states/Game */ 342);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__config__ = __webpack_require__(/*! ./config */ 345);
-
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__states_Splash__ = __webpack_require__(/*! ./states/Splash */ 340);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__states_Game__ = __webpack_require__(/*! ./states/Game */ 342);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__config__ = __webpack_require__(/*! ./config */ 346);
 
 
 
@@ -10902,18 +10901,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 class Game extends __WEBPACK_IMPORTED_MODULE_2_phaser___default.a.Game {
   constructor() {
     const docElement = document.documentElement;
-    const width = docElement.clientWidth > __WEBPACK_IMPORTED_MODULE_6__config__["a" /* default */].gameWidth ? __WEBPACK_IMPORTED_MODULE_6__config__["a" /* default */].gameWidth : docElement.clientWidth;
-    const height = docElement.clientHeight > __WEBPACK_IMPORTED_MODULE_6__config__["a" /* default */].gameHeight ? __WEBPACK_IMPORTED_MODULE_6__config__["a" /* default */].gameHeight : docElement.clientHeight;
+    const width = docElement.clientWidth > __WEBPACK_IMPORTED_MODULE_5__config__["a" /* default */].gameWidth ? __WEBPACK_IMPORTED_MODULE_5__config__["a" /* default */].gameWidth : docElement.clientWidth;
+    const height = docElement.clientHeight > __WEBPACK_IMPORTED_MODULE_5__config__["a" /* default */].gameHeight ? __WEBPACK_IMPORTED_MODULE_5__config__["a" /* default */].gameHeight : docElement.clientHeight;
 
     super(width, height, __WEBPACK_IMPORTED_MODULE_2_phaser___default.a.CANVAS, 'content', null);
 
-    this.state.add('Boot', __WEBPACK_IMPORTED_MODULE_3__states_Boot__["a" /* default */], false);
-    this.state.add('Splash', __WEBPACK_IMPORTED_MODULE_4__states_Splash__["a" /* default */], false);
-    this.state.add('Game', __WEBPACK_IMPORTED_MODULE_5__states_Game__["a" /* default */], false);
+    this.state.add('Splash', __WEBPACK_IMPORTED_MODULE_3__states_Splash__["a" /* default */], false);
+    this.state.add('Game', __WEBPACK_IMPORTED_MODULE_4__states_Game__["a" /* default */], false);
 
     // with Cordova with need to wait that the device is ready so we will call the Boot state in another file
     if (!window.cordova) {
-      this.state.start('Boot');
+      this.state.start('Splash');
     }
   }
 }
@@ -10948,57 +10946,7 @@ if (window.cordova) {
 /* 336 */,
 /* 337 */,
 /* 338 */,
-/* 339 */
-/*!****************************!*\
-  !*** ./src/states/Boot.js ***!
-  \****************************/
-/*! exports provided: default */
-/*! exports used: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_phaser__ = __webpack_require__(/*! phaser */ 50);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_phaser___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_phaser__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_webfontloader__ = __webpack_require__(/*! webfontloader */ 128);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_webfontloader___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_webfontloader__);
-
-
-
-/* harmony default export */ __webpack_exports__["a"] = (class extends __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.State {
-  init() {
-    this.stage.backgroundColor = '#191716';
-    this.fontsReady = false;
-    this.fontsLoaded = this.fontsLoaded.bind(this);
-  }
-
-  preload() {
-    __WEBPACK_IMPORTED_MODULE_1_webfontloader___default.a.load({
-      google: {
-        families: ['Bangers']
-      },
-      active: this.fontsLoaded
-    });
-
-    let text = this.add.text(this.world.centerX, this.world.centerY, 'loading fonts', { font: '16px Arial', fill: '#dddddd', align: 'center' });
-    text.anchor.setTo(0.5, 0.5);
-
-    // this.load.image('loaderBg', './assets/images/loader-bg.png')
-    //
-    // this.load.image('loaderBar', './assets/images/loader-bar.png')
-  }
-
-  render() {
-    if (this.fontsReady) {
-      this.state.start('Splash');
-    }
-  }
-
-  fontsLoaded() {
-    this.fontsReady = true;
-  }
-});
-
-/***/ }),
+/* 339 */,
 /* 340 */
 /*!******************************!*\
   !*** ./src/states/Splash.js ***!
@@ -11037,6 +10985,7 @@ if (window.cordova) {
     __WEBPACK_IMPORTED_MODULE_4__sprites_MineEntrance__["a" /* default */].preload(this.game);
 
     this.game.load.spritesheet('blood', 'assets/blood.png', 32, 32, -1, 32, 32);
+    this.game.load.image('knightHawks', 'assets/KNIGHT3.png');
 
     this.game.load.image('confusion', 'assets/infusionsoft.png', 300, 300);
 
@@ -11101,7 +11050,6 @@ const centerGameObjects = objects => {
     game.physics.startSystem(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Physics.ARCADE);
 
     this.miner = new __WEBPACK_IMPORTED_MODULE_1__sprites_Miner__["a" /* default */](game, 0, 0);
-    this.miner.create();
 
     this.loader = new __WEBPACK_IMPORTED_MODULE_5__LevelLoader__["a" /* default */](game);
     this.loader.onLayerLoaded.add(() => {
@@ -11109,39 +11057,41 @@ const centerGameObjects = objects => {
     });
     this.map = this.loader.loadMap('cave');
     this.loader.loadLayer('Overworld');
+    this.game.add.existing(this.miner);
 
-    this.group = game.add.group();
-    this.group.addChild(this.miner);
+    //this.squirrels = this.game.add.physicsGroup(Phaser.Physics.ARCADE);
+    //this.game.add.group(parent, name, addToStage, enableBody, physicsBodyType);
+    this.squirrels = this.game.add.group(this.game.world, 'jfjfjfjf', false, true, __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Physics.ARCADE);
 
-    // for(var i=0; i < 500; i++) {
-    //   this.group.addChild(Squirrel.createAtRandom(this.game));
-    // }
-    this.group.sort();
+    this.squirrels.addChild(this.miner);
 
-    this.blood = new __WEBPACK_IMPORTED_MODULE_3__sprites_Blood__["a" /* default */](game, 1, 1);
+    this.squirrelCount = 100;
+    for (var i = 0; i < this.squirrelCount; i++) {
+      this.squirrels.add(__WEBPACK_IMPORTED_MODULE_2__sprites_Squirrel__["a" /* default */].createAtRandom(this.game));
+    }
 
-    // this.confusion = this.game.add.sprite(50, 550, 'confusion');
-    // this.confusion.anchor.set(0.5, 0.5);
-    // this.confusion.scale.set(0.3, 0.3);
-    // this.confusion.addChild(this.blood);
+    //this.squirrels.sort();
 
-    // var confusionTween = this.game.add.tween(this.confusion);
-    // confusionTween.to({x: 750}, 5500, Phaser.Easing.Elastic.InOut, true, 0, -1, true);
+    //this.blood = new Blood(game, 1, 1)
 
     //this.loader.setupPhysics();
-    this.miner.setupPhysics();
+    //this.miner.setupPhysics();
 
     this.game.camera.follow(this.miner);
-  }
 
-  mineSomeGold() {
-    //this.mine.frame = 1;
-    this.enterGoldMine.call(this);
+    //retroFont(font, characterWidth, characterHeight, chars, charsPerRow [, xSpacing] [, ySpacing] [, xOffset] [, yOffset])
+    this.squirrelFont = game.add.retroFont('knightHawks', 31, 25, __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.RetroFont.TEXT_SET6, 10, 1, 1);
+
+    var squirrelCountContainer = game.add.image(game.width - 200, game.height - 50, this.squirrelFont);
+    squirrelCountContainer.tint = Math.random() * 0xFFFFFF;
+    squirrelCountContainer.anchor.set(0.5, 1);
+    squirrelCountContainer.scale.set(2, 2);
+    squirrelCountContainer.fixedToCamera = true;
   }
 
   enterGoldMine() {
     //this.mine.kill();
-    //this.group.kill();
+    //this.squirrels.kill();
     this.miner.position.set(550, 200);
     this.layer.destroy();
     this.layer = this.map.createLayer('Gold Mine');
@@ -11151,20 +11101,59 @@ const centerGameObjects = objects => {
     this.layer.resizeWorld();
   }
 
-  attackConfusion() {
-    if (!this.miner.attacking) {
-      this.blood.visible = false;
-      return;
-    }
-    this.blood.visible = true;
-    var bloodAnimation = this.blood.animations.getAnimation('squirt');
-    if (!bloodAnimation.isPlaying) {
-      this.blood.animations.play('squirt');
-    }
-  }
+  // attackConfusion() {
+  //   if(!this.miner.attacking) {
+  //     this.blood.visible = false;
+  //     return;
+  //   }
+  //   this.blood.visible = true;
+  //   var bloodAnimation = this.blood.animations.getAnimation('squirt');
+  //   if(!bloodAnimation.isPlaying) {
+  //     this.blood.animations.play('squirt');
+  //   }
+  // }
 
   doCollision(a, b) {
     b.collideWith(a);
+  }
+
+  squirrelKill(miner, squirrel) {
+    var killed = false;
+    if (miner.action == 'attack') {
+      if (miner.scale.x >= 0) {
+        // facing right
+        if (squirrel.position.x >= miner.position.x) {
+          //squirrel is to the right
+          var delta = squirrel.position.x - miner.position.x;
+          if (delta < 90 && delta > 50) {
+            killed = true;
+          }
+        }
+      } else {
+        // facing left
+        if (miner.scale.x < 0) {
+          if (squirrel.position.x <= miner.position.x) {
+            //squirrel is to the left
+            var delta = miner.position.x - squirrel.position.x;
+            if (delta < 90 && delta > 50) {
+              killed = true;
+            }
+          }
+        }
+      }
+
+      if (killed) {
+        var blood = new __WEBPACK_IMPORTED_MODULE_3__sprites_Blood__["a" /* default */](this.game, squirrel.position.x, squirrel.position.y - 10);
+        this.squirrels.add(blood);
+        var bloodAnimation = blood.animations.getAnimation('squirt');
+
+        blood.visible = true;
+
+        blood.animations.play('squirt');
+        squirrel.kill();
+        --this.squirrelCount;
+      }
+    }
   }
 
   update() {
@@ -11174,16 +11163,23 @@ const centerGameObjects = objects => {
     this.game.physics.arcade.collide(this.miner, this.loader.collidables, this.doCollision, null, this);
     this.game.physics.arcade.collide(this.miner, this.layer);
 
+    this.game.physics.arcade.overlap(this.miner, this.squirrels, this.squirrelKill, null, this);
+
     this.miner.update();
 
-    this.group.forEachAlive(function (s) {
+    this.squirrels.forEachAlive(function (s) {
       s.update();
     });
-    this.group.sort('y', __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Group.SORT_ASCENDING);
+    this.squirrels.sort('y', __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Group.SORT_ASCENDING);
+    this.squirrelFont.text = this.squirrelCount.toString();
   }
 
   render() {
+    //this.game.debug.body(this.miner.axHitbox);
     // this.game.debug.body(this.miner);
+    // this.squirrels.forEachAlive(function(s){ self.game.debug.body(s); });
+
+    //var self = this;
     // this.game.debug.spriteBounds(this.miner, 'pink', false);
     // this.loader.collidables.forEach( (c) => {
     //   this.game.debug.body(c);
@@ -11211,14 +11207,14 @@ class Blood extends Phaser.Sprite {
     super(game, x, y, 'blood');
 
     this.visible = false;
-    this.scale.set(6, 6);
+    this.scale.set(1, 1);
     this.anchor.set(0.5, 0.5);
     this.smoothed = false;
+    this.z = 0;
 
-    var bloodAnimation = this.animations.add('squirt', [0, 5, 10], 5, false);
-    bloodAnimation.onComplete.add(function (sprite, animation) {
-      sprite.visible = false;
-    }, this);
+    var bloodAnimation = this.animations.add('squirt', [0, 5, 10], 10, false);
+
+    // /bloodAnimation.onComplete.add(function(sprite, animation){ sprite.visible=false; }, this);
   }
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = Blood;
@@ -11235,7 +11231,7 @@ class Blood extends Phaser.Sprite {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__sprites_MineEntrance__ = __webpack_require__(/*! ./sprites/MineEntrance */ 91);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sprites_Blocker__ = __webpack_require__(/*! ./sprites/Blocker */ 347);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sprites_Blocker__ = __webpack_require__(/*! ./sprites/Blocker */ 345);
 
 
 
@@ -11370,23 +11366,6 @@ class LevelLoader {
 
 /***/ }),
 /* 345 */
-/*!***********************!*\
-  !*** ./src/config.js ***!
-  \***********************/
-/*! exports provided: default */
-/*! exports used: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony default export */ __webpack_exports__["a"] = ({
-  gameWidth: 800,
-  gameHeight: 600,
-  localStorageName: 'cf-prospector'
-});
-
-/***/ }),
-/* 346 */,
-/* 347 */
 /*!********************************!*\
   !*** ./src/sprites/Blocker.js ***!
   \********************************/
@@ -11420,6 +11399,22 @@ class Blocker extends Phaser.Sprite {
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = Blocker;
 
+
+/***/ }),
+/* 346 */
+/*!***********************!*\
+  !*** ./src/config.js ***!
+  \***********************/
+/*! exports provided: default */
+/*! exports used: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ __webpack_exports__["a"] = ({
+  gameWidth: 1200,
+  gameHeight: 800,
+  localStorageName: 'cf-prospector'
+});
 
 /***/ })
 ],[131]);

@@ -10,8 +10,7 @@ export default class Squirrel extends Phaser.Sprite {
     this.animations.play('run');
 
     this.lastChange = 0;
-    game.physics.arcade.enable(this);
-    this.collideWorldBounds = true;
+    this.z = 9
   }
 
   static preload() {
@@ -22,17 +21,18 @@ export default class Squirrel extends Phaser.Sprite {
     var rnd = game.rnd;
     var x = rnd.between(0,game.world.width);
     var y = rnd.between(0, game.world.height);
+
     var squirrel = new Squirrel(game, x, y);
-    game.add.existing(squirrel);
     return squirrel;
   }
 
   update() {
-    var speed = 4;
+    var speed = 300;
 
     var i = this.game.rnd.integerInRange(0,100);
     var now = this.game.time.now;
     var lastChangeDiff = now - this.lastChange;
+
     if(lastChangeDiff > this.game.rnd.between(300,1200)) {
       this.lastChange = this.game.time.now;
       if(i < 33) {
@@ -48,14 +48,15 @@ export default class Squirrel extends Phaser.Sprite {
     }
 
     if(this.movingRight) {
-      this.position.x += speed;
+      this.body.velocity.x = speed;
       this.scale.x = Math.abs(this.scale.x);
       this.animations.play('run');
     }else if(this.movingLeft) {
       this.scale.x = -Math.abs(this.scale.x);
-      this.position.x -= speed;
+      this.body.velocity.x = -speed;
       this.animations.play('run');
     } else {
+      this.body.velocity.x = 0;
       this.animations.play('idle');
     }
   }
