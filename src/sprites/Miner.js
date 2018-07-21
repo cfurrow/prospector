@@ -33,13 +33,12 @@ export default class Miner extends Phaser.Sprite {
     this.animations.add('attack-down-right', [28, 33, 38, 43, 48], 10, true);
     this.animations.add('attack-down',       [29, 34, 39, 44, 49], 10, true);
 
-    var hitboxes = this.game.add.group();
-    hitboxes.enableBody = true;
-    this.addChild(hitboxes);
 
-    this.axHitbox = hitboxes.create(20,-10,null);
-    this.axHitbox.anchor.set(0.5,0.5);
-    this.axHitbox.body.setSize(50,50,0,0);
+    // this.axHitbox = this.game.add.sprite(20,-25);
+    // this.axHitbox.anchor.set(0.5,0.5);
+    // this.game.physics.arcade.enable(this.axHitbox);
+    // this.axHitbox.body.setSize(50,50,0,0);
+    // this.addChild(this.axHitbox);
 
     this.setupPhysics();
 

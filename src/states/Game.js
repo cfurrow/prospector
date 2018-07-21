@@ -73,15 +73,40 @@ export default class extends Phaser.State {
   }
 
   squirrelKill(miner, squirrel) {
+    var killed = false;
     if(miner.action=='attack') {
-      var blood = new Blood(this.game, squirrel.position.x, squirrel.position.y)
-      this.squirrels.add(blood);
-      var bloodAnimation = blood.animations.getAnimation('squirt');
+      if(miner.scale.x >= 0) {
+        // facing right
+        if(squirrel.position.x >= miner.position.x) {
+          //squirrel is to the right
+          var delta = squirrel.position.x - miner.position.x;
+          if(delta < 90 && delta > 50) {
+            killed = true;
+          }
+        }
+      } else {
+        // facing left
+        if(miner.scale.x < 0) {
+          if(squirrel.position.x <= miner.position.x) {
+            //squirrel is to the left
+            var delta = miner.position.x - squirrel.position.x;
+            if(delta < 90 && delta > 50) {
+              killed = true;
+            }
+          }
+        }
+      }
 
-      blood.visible = true;
+      if(killed) {
+        var blood = new Blood(this.game, squirrel.position.x, squirrel.position.y-10)
+        this.squirrels.add(blood);
+        var bloodAnimation = blood.animations.getAnimation('squirt');
 
-      blood.animations.play('squirt');
-      squirrel.kill();
+        blood.visible = true;
+
+        blood.animations.play('squirt');
+        squirrel.kill();
+      }
     }
   }
 
@@ -101,6 +126,7 @@ export default class extends Phaser.State {
   }
 
   render () {
+    //this.game.debug.body(this.miner.axHitbox);
     // this.game.debug.body(this.miner);
     // this.squirrels.forEachAlive(function(s){ self.game.debug.body(s); });
 

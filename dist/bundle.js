@@ -4335,13 +4335,11 @@ class Miner extends Phaser.Sprite {
     this.animations.add('attack-down-right', [28, 33, 38, 43, 48], 10, true);
     this.animations.add('attack-down', [29, 34, 39, 44, 49], 10, true);
 
-    var hitboxes = this.game.add.group();
-    hitboxes.enableBody = true;
-    this.addChild(hitboxes);
-
-    this.axHitbox = hitboxes.create(20, -10, null);
-    this.axHitbox.anchor.set(0.5, 0.5);
-    this.axHitbox.body.setSize(50, 50, 0, 0);
+    // this.axHitbox = this.game.add.sprite(20,-25);
+    // this.axHitbox.anchor.set(0.5,0.5);
+    // this.game.physics.arcade.enable(this.axHitbox);
+    // this.axHitbox.body.setSize(50,50,0,0);
+    // this.addChild(this.axHitbox);
 
     this.setupPhysics();
 
@@ -11162,15 +11160,40 @@ const centerGameObjects = objects => {
   }
 
   squirrelKill(miner, squirrel) {
+    var killed = false;
     if (miner.action == 'attack') {
-      var blood = new __WEBPACK_IMPORTED_MODULE_3__sprites_Blood__["a" /* default */](this.game, squirrel.position.x, squirrel.position.y);
-      this.squirrels.add(blood);
-      var bloodAnimation = blood.animations.getAnimation('squirt');
+      if (miner.scale.x >= 0) {
+        // facing right
+        if (squirrel.position.x >= miner.position.x) {
+          //squirrel is to the right
+          var delta = squirrel.position.x - miner.position.x;
+          if (delta < 90 && delta > 50) {
+            killed = true;
+          }
+        }
+      } else {
+        // facing left
+        if (miner.scale.x < 0) {
+          if (squirrel.position.x <= miner.position.x) {
+            //squirrel is to the left
+            var delta = miner.position.x - squirrel.position.x;
+            if (delta < 90 && delta > 50) {
+              killed = true;
+            }
+          }
+        }
+      }
 
-      blood.visible = true;
+      if (killed) {
+        var blood = new __WEBPACK_IMPORTED_MODULE_3__sprites_Blood__["a" /* default */](this.game, squirrel.position.x, squirrel.position.y - 10);
+        this.squirrels.add(blood);
+        var bloodAnimation = blood.animations.getAnimation('squirt');
 
-      blood.animations.play('squirt');
-      squirrel.kill();
+        blood.visible = true;
+
+        blood.animations.play('squirt');
+        squirrel.kill();
+      }
     }
   }
 
@@ -11192,6 +11215,7 @@ const centerGameObjects = objects => {
   }
 
   render() {
+    //this.game.debug.body(this.miner.axHitbox);
     // this.game.debug.body(this.miner);
     // this.squirrels.forEachAlive(function(s){ self.game.debug.body(s); });
 
