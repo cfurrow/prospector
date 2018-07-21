@@ -18,10 +18,34 @@ export default class Miner extends Phaser.Sprite {
 
     this.xWalkFrame = null;
     this.yWalkFrame = null;
+
+    this.game.physics.arcade.enable(this);
+
+    this.animations.add('walk-up',          [0, 5, 10, 15, 20], 10, true);
+    this.animations.add('walk-up-right',    [1, 6, 11, 16, 21], 10, true);
+    this.animations.add('walk-right',       [2, 7, 12, 17, 22], 10, true);
+    this.animations.add('walk-down-right',  [3, 8, 13, 18, 23], 10, true);
+    this.animations.add('walk-down',        [4, 9, 14, 19, 24], 10, true);
+
+    this.animations.add('attack-up',         [25, 30, 35, 40, 45], 10, true);
+    this.animations.add('attack-up-right',   [26, 31, 36, 41, 46], 10, true);
+    this.animations.add('attack-right',      [27, 32, 37, 42, 47], 10, true);
+    this.animations.add('attack-down-right', [28, 33, 38, 43, 48], 10, true);
+    this.animations.add('attack-down',       [29, 34, 39, 44, 49], 10, true);
+
+    var hitboxes = this.game.add.group();
+    hitboxes.enableBody = true;
+    this.addChild(hitboxes);
+
+    this.axHitbox = hitboxes.create(20,-10,null);
+    this.axHitbox.anchor.set(0.5,0.5);
+    this.axHitbox.body.setSize(50,50,0,0);
+
+    this.setupPhysics();
   }
 
   static preload(game) {
-    // spritesheet(key, url, frameWidth, frameHeight [, frameMax] [, margin] [, spacing] [, skipFrames]) 
+    // spritesheet(key, url, frameWidth, frameHeight [, frameMax] [, margin] [, spacing] [, skipFrames])
     //game.load.spritesheet('miner', 'assets/miner.png', Miner.width, Miner.height, 65, 0);
     game.load.spritesheet('miner', 'assets/miner.png', Miner.width, Miner.height);
     game.load.spritesheet('miner-with-gold', 'assets/miner-with-gold.png', Miner.width, Miner.height);
@@ -127,30 +151,6 @@ export default class Miner extends Phaser.Sprite {
     animationKey = this.action + '-' + directionKey;
 
     this.animations.play(animationKey);
-  }
-
-  create() {
-    this.game.physics.arcade.enable(this);
-
-    this.animations.add('walk-up',          [0, 5, 10, 15, 20], 10, true);
-    this.animations.add('walk-up-right',    [1, 6, 11, 16, 21], 10, true);
-    this.animations.add('walk-right',       [2, 7, 12, 17, 22], 10, true);
-    this.animations.add('walk-down-right',  [3, 8, 13, 18, 23], 10, true);
-    this.animations.add('walk-down',        [4, 9, 14, 19, 24], 10, true);
-
-    this.animations.add('attack-up',         [25, 30, 35, 40, 45], 10, true);
-    this.animations.add('attack-up-right',   [26, 31, 36, 41, 46], 10, true);
-    this.animations.add('attack-right',      [27, 32, 37, 42, 47], 10, true);
-    this.animations.add('attack-down-right', [28, 33, 38, 43, 48], 10, true);
-    this.animations.add('attack-down',       [29, 34, 39, 44, 49], 10, true);
-
-    var hitboxes = this.game.add.group();
-    hitboxes.enableBody = true;
-    this.addChild(hitboxes);
-    
-    this.axHitbox = hitboxes.create(20,-10,null);
-    this.axHitbox.anchor.set(0.5,0.5);
-    this.axHitbox.body.setSize(50,50,0,0);
   }
 
   setupPhysics() {
