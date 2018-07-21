@@ -21,6 +21,7 @@ export default class extends Phaser.State {
     MineEntrance.preload(this.game);
 
     this.game.load.spritesheet('blood', 'assets/blood.png', 32, 32, -1, 32, 32);
+    this.game.load.image('knightHawks', 'assets/KNIGHT3.png');
 
     this.game.load.image('confusion', 'assets/infusionsoft.png', 300, 300);
 

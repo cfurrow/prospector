@@ -30,7 +30,8 @@ export default class extends Phaser.State {
 
     this.squirrels.addChild(this.miner);
 
-    for(var i=0; i < 100; i++) {
+    this.squirrelCount = 100;
+    for(var i=0; i < this.squirrelCount; i++) {
       this.squirrels.add(Squirrel.createAtRandom(this.game));
     }
 
@@ -42,6 +43,15 @@ export default class extends Phaser.State {
     //this.miner.setupPhysics();
 
     this.game.camera.follow(this.miner);
+
+    //retroFont(font, characterWidth, characterHeight, chars, charsPerRow [, xSpacing] [, ySpacing] [, xOffset] [, yOffset])
+    this.squirrelFont = game.add.retroFont('knightHawks', 31, 25, Phaser.RetroFont.TEXT_SET6, 10, 1, 1);
+
+    var squirrelCountContainer = game.add.image(game.width-200, game.height-50, this.squirrelFont);
+    squirrelCountContainer.tint = Math.random() * 0xFFFFFF;
+    squirrelCountContainer.anchor.set(0.5, 1);
+    squirrelCountContainer.scale.set(2,2);
+    squirrelCountContainer.fixedToCamera = true;
   }
 
   enterGoldMine() {
@@ -106,6 +116,7 @@ export default class extends Phaser.State {
 
         blood.animations.play('squirt');
         squirrel.kill();
+        --this.squirrelCount;
       }
     }
   }
@@ -121,8 +132,9 @@ export default class extends Phaser.State {
 
     this.miner.update();
 
-    this.squirrels.forEachAlive(function(s){ s.update(); });
+    this.squirrels.forEachAlive(function(s) { s.update(); });
     this.squirrels.sort('y', Phaser.Group.SORT_ASCENDING);
+    this.squirrelFont.text = this.squirrelCount.toString();
   }
 
   render () {

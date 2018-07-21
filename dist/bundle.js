@@ -11038,6 +11038,7 @@ if (window.cordova) {
     __WEBPACK_IMPORTED_MODULE_4__sprites_MineEntrance__["a" /* default */].preload(this.game);
 
     this.game.load.spritesheet('blood', 'assets/blood.png', 32, 32, -1, 32, 32);
+    this.game.load.image('knightHawks', 'assets/KNIGHT3.png');
 
     this.game.load.image('confusion', 'assets/infusionsoft.png', 300, 300);
 
@@ -11117,7 +11118,8 @@ const centerGameObjects = objects => {
 
     this.squirrels.addChild(this.miner);
 
-    for (var i = 0; i < 100; i++) {
+    this.squirrelCount = 100;
+    for (var i = 0; i < this.squirrelCount; i++) {
       this.squirrels.add(__WEBPACK_IMPORTED_MODULE_2__sprites_Squirrel__["a" /* default */].createAtRandom(this.game));
     }
 
@@ -11129,6 +11131,15 @@ const centerGameObjects = objects => {
     //this.miner.setupPhysics();
 
     this.game.camera.follow(this.miner);
+
+    //retroFont(font, characterWidth, characterHeight, chars, charsPerRow [, xSpacing] [, ySpacing] [, xOffset] [, yOffset])
+    this.squirrelFont = game.add.retroFont('knightHawks', 31, 25, __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.RetroFont.TEXT_SET6, 10, 1, 1);
+
+    var squirrelCountContainer = game.add.image(game.width - 200, game.height - 50, this.squirrelFont);
+    squirrelCountContainer.tint = Math.random() * 0xFFFFFF;
+    squirrelCountContainer.anchor.set(0.5, 1);
+    squirrelCountContainer.scale.set(2, 2);
+    squirrelCountContainer.fixedToCamera = true;
   }
 
   enterGoldMine() {
@@ -11193,6 +11204,7 @@ const centerGameObjects = objects => {
 
         blood.animations.play('squirt');
         squirrel.kill();
+        --this.squirrelCount;
       }
     }
   }
@@ -11212,6 +11224,7 @@ const centerGameObjects = objects => {
       s.update();
     });
     this.squirrels.sort('y', __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Group.SORT_ASCENDING);
+    this.squirrelFont.text = this.squirrelCount.toString();
   }
 
   render() {
@@ -11451,8 +11464,8 @@ class Blocker extends Phaser.Sprite {
 
 "use strict";
 /* harmony default export */ __webpack_exports__["a"] = ({
-  gameWidth: 800,
-  gameHeight: 600,
+  gameWidth: 1200,
+  gameHeight: 800,
   localStorageName: 'cf-prospector'
 });
 
