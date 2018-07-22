@@ -1,3 +1,6 @@
+import Phaser from 'phaser';
+import Controller from '../Controller';
+
 export default class Miner extends Phaser.Sprite {
   static get width() {
     return 72
@@ -8,13 +11,12 @@ export default class Miner extends Phaser.Sprite {
   }
 
   constructor(game, x, y) {
-    super(game, x, y, 'miner')
+    super(game, x, y, 'miner');
     this.scale.set(3,3);
     this.anchor.set(0.5, 0.8);
     this.smoothed = false;
 
-    this.controller       = this.game.input.keyboard.createCursorKeys();
-    this.controller.space = this.game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
+    this.controller = new Controller(game);
 
     this.xWalkFrame = null;
     this.yWalkFrame = null;
