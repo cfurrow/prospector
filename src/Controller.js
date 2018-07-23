@@ -45,7 +45,10 @@ export default class {
     this.game = game;
     this.keyboard = game.input.keyboard;
 
-    this.setup();
+
+    this.setupKeys();
+    game.input.onTap = this.onTap;
+    game.input.onTap = this.onUp;
 
     this._left  = new InputState([this.keys.left,  this.keys.left_alt]);
     this._right = new InputState([this.keys.right, this.keys.right_alt]);
@@ -56,7 +59,15 @@ export default class {
     console.log("Controller setup", this)
   }
 
-  setup() {
+  onTap(pointer, doubleTab) {
+    
+  }
+
+  onUp(pointer, event) {
+
+  }
+
+  setupKeys() {
     this.keys = this.keyboard.addKeys({
       'up':        Phaser.KeyCode.UP,
       'down':      Phaser.KeyCode.DOWN,
