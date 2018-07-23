@@ -1,3 +1,4 @@
+import Blood from './Blood';
 export default class Squirrel extends Phaser.Sprite {
   constructor(game, x, y) {
     super(game, x, y, 'squirrel')
@@ -24,6 +25,17 @@ export default class Squirrel extends Phaser.Sprite {
 
     var squirrel = new Squirrel(game, x, y);
     return squirrel;
+  }
+
+  onHit(bloodGroup) {
+    var blood = new Blood(this.game, this.position.x, this.position.y-10)
+    bloodGroup.add(blood);
+    var bloodAnimation = blood.animations.getAnimation('squirt');
+
+    blood.visible = true;
+
+    blood.animations.play('squirt');
+    this.kill();
   }
 
   update() {

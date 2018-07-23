@@ -108,14 +108,7 @@ export default class extends Phaser.State {
       }
 
       if(killed) {
-        var blood = new Blood(this.game, squirrel.position.x, squirrel.position.y-10)
-        this.squirrels.add(blood);
-        var bloodAnimation = blood.animations.getAnimation('squirt');
-
-        blood.visible = true;
-
-        blood.animations.play('squirt');
-        squirrel.kill();
+        squirrel.onHit(this.squirrels);
         --this.squirrelCount;
       }
     }
