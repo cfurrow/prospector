@@ -4429,6 +4429,14 @@ class Miner extends __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Sprite {
     return this.controller.up.isDown || this.controller.down.isDown;
   }
 
+  axIsInKillPosition() {
+    let killFrames = [35, 40, 45, 36, 41, 46, 37, 42, 47, 38, 43, 48, 39, 44, 49];
+    if (this.animations.currentAnim.name.indexOf('attack-') == 0) {
+      return killFrames.indexOf(this.animations.currentFrame.index) >= 0;
+    }
+    return false;
+  }
+
   animate() {
     var directionKey = [];
     var animationKey = null;
@@ -4475,6 +4483,8 @@ class Miner extends __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Sprite {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Blood__ = __webpack_require__(/*! ./Blood */ 341);
+
 class Squirrel extends Phaser.Sprite {
   constructor(game, x, y) {
     super(game, x, y, 'squirrel');
@@ -4501,6 +4511,17 @@ class Squirrel extends Phaser.Sprite {
 
     var squirrel = new Squirrel(game, x, y);
     return squirrel;
+  }
+
+  onHit(bloodGroup) {
+    var blood = new __WEBPACK_IMPORTED_MODULE_0__Blood__["a" /* default */](this.game, this.position.x, this.position.y - 10);
+    bloodGroup.add(blood);
+    var bloodAnimation = blood.animations.getAnimation('squirt');
+
+    blood.visible = true;
+
+    blood.animations.play('squirt');
+    this.kill();
   }
 
   update() {
@@ -11122,7 +11143,7 @@ const centerGameObjects = objects => {
 
   squirrelKill(miner, squirrel) {
     var killed = false;
-    if (miner.action == 'attack') {
+    if (miner.action == 'attack' && miner.axIsInKillPosition()) {
       if (miner.scale.x >= 0) {
         // facing right
         if (squirrel.position.x >= miner.position.x) {
@@ -11146,14 +11167,7 @@ const centerGameObjects = objects => {
       }
 
       if (killed) {
-        var blood = new __WEBPACK_IMPORTED_MODULE_3__sprites_Blood__["a" /* default */](this.game, squirrel.position.x, squirrel.position.y - 10);
-        this.squirrels.add(blood);
-        var bloodAnimation = blood.animations.getAnimation('squirt');
-
-        blood.visible = true;
-
-        blood.animations.play('squirt');
-        squirrel.kill();
+        squirrel.onHit(this.squirrels);
         --this.squirrelCount;
       }
     }
@@ -11480,7 +11494,9 @@ class InputState {
     this.game = game;
     this.keyboard = game.input.keyboard;
 
-    this.setup();
+    this.setupKeys();
+    game.input.onTap = this.onTap;
+    game.input.onTap = this.onUp;
 
     this._left = new InputState([this.keys.left, this.keys.left_alt]);
     this._right = new InputState([this.keys.right, this.keys.right_alt]);
@@ -11491,7 +11507,11 @@ class InputState {
     console.log("Controller setup", this);
   }
 
-  setup() {
+  onTap(pointer, doubleTab) {}
+
+  onUp(pointer, event) {}
+
+  setupKeys() {
     this.keys = this.keyboard.addKeys({
       'up': __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.UP,
       'down': __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.DOWN,

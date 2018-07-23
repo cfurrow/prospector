@@ -129,6 +129,14 @@ export default class Miner extends Phaser.Sprite {
            this.controller.down.isDown;
   }
 
+  axIsInKillPosition() {
+    let killFrames = [35,40,45, 36,41,46, 37,42, 47, 38,43,48, 39,44,49];
+    if(this.animations.currentAnim.name.indexOf('attack-') == 0) {
+      return killFrames.indexOf(this.animations.currentFrame.index) >=0;
+    }
+    return false;
+  }
+
   animate() {
     var directionKey = [];
     var animationKey = null;

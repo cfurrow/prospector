@@ -84,7 +84,7 @@ export default class extends Phaser.State {
 
   squirrelKill(miner, squirrel) {
     var killed = false;
-    if(miner.action=='attack') {
+    if(miner.action=='attack' && miner.axIsInKillPosition()) {
       if(miner.scale.x >= 0) {
         // facing right
         if(squirrel.position.x >= miner.position.x) {
