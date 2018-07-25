@@ -31,10 +31,17 @@ export default class LevelLoader {
     return this._onLayerLoaded;
   }
 
+  get layerObjects() {
+    return this._layerObjects;
+  }
+
   constructor(game) {
     this._game = game
     this._playerStart = new PIXI.Point();
     this._onLayerLoaded = new Phaser.Signal();
+    this.layers = [];
+    this._layerObjects = {};
+
     // parent, name, addToStage, enableBody, physicsBodyType
   }
 
@@ -56,9 +63,10 @@ export default class LevelLoader {
   }
 
   _loadAllLayers() {
-    this.layers = [];
     this._map.layers.forEach((layer, index) =>{
-      let newLayer = this.map.createLayer(index);
+      //createLayer(layer [, width] [, height] [, group])
+      this._layerObjects[layer.name] = this.game.add.group();
+      let newLayer = this.map.createLayer(index, null, null, this._layerObjects[layer.name]);
       newLayer.visible = false;
       this.layers.push(newLayer);
     })
@@ -72,13 +80,16 @@ export default class LevelLoader {
     if(this.collidables) {
       this.collidables.destroy();
     }
+
     if(this.layer) {
+      this._layerObjects[this.layer.layer.name].visible = false;
       this.layer.visible = false;
     }
 
     this.layer = this.layers.find((layer)=>{
       return layer.layer.name == name;
     })
+    this._layerObjects[this.layer.layer.name].visible = true;
     this.layer.visible = true;
 
     this.map.setLayer(this.layer);

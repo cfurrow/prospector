@@ -11198,11 +11198,13 @@ class InputState {
     this.loader.loadLayer('Overworld', true);
     this.game.add.existing(this.miner);
 
+    this.layerGroup = this.loader.layerObjects['Overworld'];
     // group(parent, name, addToStage, enableBody, physicsBodyType);
     this.squirrels = this.game.add.group(this.game.world, 'squirrels', false, true, __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Physics.ARCADE);
+    this.layerGroup.add(this.squirrels);
 
     // TODO: do I have to?
-    this.squirrels.addChild(this.miner);
+    //this.squirrels.addChild(this.miner);
 
     this.squirrelCount = 100;
     for (var i = 0; i < this.squirrelCount; i++) {
@@ -11341,10 +11343,17 @@ class LevelLoader {
     return this._onLayerLoaded;
   }
 
+  get layerObjects() {
+    return this._layerObjects;
+  }
+
   constructor(game) {
     this._game = game;
     this._playerStart = new PIXI.Point();
     this._onLayerLoaded = new Phaser.Signal();
+    this.layers = [];
+    this._layerObjects = {};
+
     // parent, name, addToStage, enableBody, physicsBodyType
   }
 
@@ -11366,9 +11375,10 @@ class LevelLoader {
   }
 
   _loadAllLayers() {
-    this.layers = [];
     this._map.layers.forEach((layer, index) => {
-      let newLayer = this.map.createLayer(index);
+      //createLayer(layer [, width] [, height] [, group])
+      this._layerObjects[layer.name] = this.game.add.group();
+      let newLayer = this.map.createLayer(index, null, null, this._layerObjects[layer.name]);
       newLayer.visible = false;
       this.layers.push(newLayer);
     });
@@ -11382,13 +11392,16 @@ class LevelLoader {
     if (this.collidables) {
       this.collidables.destroy();
     }
+
     if (this.layer) {
+      this._layerObjects[this.layer.layer.name].visible = false;
       this.layer.visible = false;
     }
 
     this.layer = this.layers.find(layer => {
       return layer.layer.name == name;
     });
+    this._layerObjects[this.layer.layer.name].visible = true;
     this.layer.visible = true;
 
     this.map.setLayer(this.layer);

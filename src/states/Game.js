@@ -23,11 +23,13 @@ export default class extends Phaser.State {
     this.loader.loadLayer('Overworld', true);
     this.game.add.existing(this.miner);
 
+    this.layerGroup = this.loader.layerObjects['Overworld'];
     // group(parent, name, addToStage, enableBody, physicsBodyType);
     this.squirrels = this.game.add.group(this.game.world, 'squirrels', false, true, Phaser.Physics.ARCADE);
+    this.layerGroup.add(this.squirrels);
 
     // TODO: do I have to?
-    this.squirrels.addChild(this.miner);
+    //this.squirrels.addChild(this.miner);
 
     this.squirrelCount = 100;
     for(var i=0; i < this.squirrelCount; i++) {
