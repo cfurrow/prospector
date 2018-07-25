@@ -11350,6 +11350,8 @@ class LevelLoader {
 
   loadMap(name) {
     this._map = game.add.tilemap(name);
+    // Load all layers
+    this._loadAllLayers();
     this._loadTilesetsFromCache();
 
     return this._map;
@@ -11363,20 +11365,34 @@ class LevelLoader {
     });
   }
 
+  _loadAllLayers() {
+    this.layers = [];
+    this._map.layers.forEach((layer, index) => {
+      let newLayer = this.map.createLayer(index);
+      newLayer.visible = false;
+      this.layers.push(newLayer);
+    });
+  }
+
   loadLayer(name, setPlayerCoordinates = false) {
     const SCALE = 3;
     let map = this.map;
     const game = this.game;
 
-    if (this.layer) {
-      this.layer.destroy();
-    }
-
     if (this.collidables) {
       this.collidables.destroy();
     }
+    if (this.layer) {
+      this.layer.visible = false;
+    }
 
-    this.layer = map.createLayer(name);
+    this.layer = this.layers.find(layer => {
+      return layer.layer.name == name;
+    });
+    this.layer.visible = true;
+
+    this.map.setLayer(this.layer);
+
     this.layer.setScale(SCALE);
     this.layer.resizeWorld();
 
