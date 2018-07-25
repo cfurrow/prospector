@@ -23,11 +23,10 @@ export default class extends Phaser.State {
     this.loader.loadLayer('Overworld');
     this.game.add.existing(this.miner);
 
+    // group(parent, name, addToStage, enableBody, physicsBodyType);
+    this.squirrels = this.game.add.group(this.game.world, 'squirrels', false, true, Phaser.Physics.ARCADE);
 
-    //this.squirrels = this.game.add.physicsGroup(Phaser.Physics.ARCADE);
-    //this.game.add.group(parent, name, addToStage, enableBody, physicsBodyType);
-    this.squirrels = this.game.add.group(this.game.world, 'jfjfjfjf', false, true, Phaser.Physics.ARCADE);
-
+    // TODO: do I have to?
     this.squirrels.addChild(this.miner);
 
     this.squirrelCount = 100;
@@ -35,48 +34,9 @@ export default class extends Phaser.State {
       this.squirrels.add(Squirrel.createAtRandom(this.game));
     }
 
-    //this.squirrels.sort();
-
-    //this.blood = new Blood(game, 1, 1)
-
-    //this.loader.setupPhysics();
-    //this.miner.setupPhysics();
-
     this.game.camera.follow(this.miner);
-
-    //retroFont(font, characterWidth, characterHeight, chars, charsPerRow [, xSpacing] [, ySpacing] [, xOffset] [, yOffset])
-    this.squirrelFont = game.add.retroFont('knightHawks', 31, 25, Phaser.RetroFont.TEXT_SET6, 10, 1, 1);
-
-    var squirrelCountContainer = game.add.image(game.width-200, game.height-50, this.squirrelFont);
-    squirrelCountContainer.tint = 0xFFF000;
-    squirrelCountContainer.anchor.set(0.5, 1);
-    squirrelCountContainer.scale.set(2,2);
-    squirrelCountContainer.fixedToCamera = true;
+    this.setupSquirrelCounter();
   }
-
-  enterGoldMine() {
-    //this.mine.kill();
-    //this.squirrels.kill();
-    this.miner.position.set(550, 200);
-    this.layer.destroy();
-    this.layer = this.map.createLayer('Gold Mine');
-    this.map.setCollisionByExclusion([83,84,85,99,100,101,112,113,128,129,144,145,160,161,115,131,147,148]);
-    this.layer.setScale(3);
-    this.layer.sendToBack();
-    this.layer.resizeWorld();
-  }
-
-  // attackConfusion() {
-  //   if(!this.miner.attacking) {
-  //     this.blood.visible = false;
-  //     return;
-  //   }
-  //   this.blood.visible = true;
-  //   var bloodAnimation = this.blood.animations.getAnimation('squirt');
-  //   if(!bloodAnimation.isPlaying) {
-  //     this.blood.animations.play('squirt');
-  //   }
-  // }
 
   doCollision(a, b) {
     b.collideWith(a);
@@ -116,7 +76,6 @@ export default class extends Phaser.State {
 
   update() {
     var speed = 200;
-    //this.mine.frame = 0; // reset to "off"
 
     this.game.physics.arcade.collide(this.miner, this.loader.collidables, this.doCollision, null, this);
     this.game.physics.arcade.collide(this.miner, this.layer);
@@ -145,5 +104,16 @@ export default class extends Phaser.State {
     //this.game.debug.body(this.mine);
     //this.game.debug.body(this.axHitbox);
     //this.layer.debug = true;
+  }
+
+  setupSquirrelCounter() {
+    //retroFont(font, characterWidth, characterHeight, chars, charsPerRow [, xSpacing] [, ySpacing] [, xOffset] [, yOffset])
+    this.squirrelFont = this.game.add.retroFont('knightHawks', 31, 25, Phaser.RetroFont.TEXT_SET6, 10, 1, 1);
+
+    var squirrelCountContainer = this.game.add.image(this.game.width-200, this.game.height-50, this.squirrelFont);
+    squirrelCountContainer.tint = 0xFFF000;
+    squirrelCountContainer.anchor.set(0.5, 1);
+    squirrelCountContainer.scale.set(2,2);
+    squirrelCountContainer.fixedToCamera = true;
   }
 }
