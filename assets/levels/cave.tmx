@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="16" tileheight="16" nextobjectid="37">
+<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="16" tileheight="16" infinite="0" nextobjectid="37">
  <properties>
   <property name="TilesetCacheKey" value="cave"/>
   <property name="TilesetName" value="cave"/>
@@ -46,6 +46,10 @@
 </data>
  </layer>
  <layer name="Overworld" width="30" height="30" visible="0">
+  <properties>
+   <property name="PlayerStartX" type="float" value="42"/>
+   <property name="PlayerStartY" type="float" value="55"/>
+  </properties>
   <data encoding="csv">
 146,161,162,145,162,130,161,161,130,161,129,145,146,161,129,161,130,161,161,161,145,145,161,146,145,161,162,162,162,145,
 162,161,129,146,162,161,146,113,162,146,145,162,162,162,161,161,113,161,162,146,147,161,161,130,145,146,146,161,162,145,
@@ -80,23 +84,21 @@
 </data>
  </layer>
  <objectgroup name="Overworld Objects" visible="0" offsetx="5.68434e-14" offsety="1.61952">
-  <object id="20" name="Start" type="MinerStart" x="41.7992" y="55.405" width="17.0878" height="16.0522"/>
   <object id="22" name="Go into mine" type="MineEntrance" gid="337" x="111.149" y="72.0905" width="48" height="48">
    <properties>
     <property name="LayerName" value="Gold Mine"/>
     <property name="SpriteKey" value="mine"/>
+    <property name="TransportX" type="float" value="178"/>
+    <property name="TransportY" type="float" value="87"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup name="Gold Mine Objects">
-  <object id="23" name="Start" type="MinerStart" x="178.502" y="87.5098" width="17.0878" height="16.0522">
-   <properties>
-    <property name="LayerName" value="Overworld"/>
-   </properties>
-  </object>
   <object id="25" name="Mine Exit" type="MineEntrance" x="160.522" y="24.855" width="50.7456" height="18.1234">
    <properties>
     <property name="LayerName" value="Overworld"/>
+    <property name="TransportX" type="float" value="75"/>
+    <property name="TransportY" type="float" value="127"/>
    </properties>
   </object>
   <object id="28" type="Blocker" x="209.196" y="-2.07125" width="68.8691" height="193.144"/>

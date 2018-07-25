@@ -3131,12 +3131,6 @@ class MineEntrance extends Phaser.Sprite {
     let spriteKey = properties.SpriteKey;
 
     super(game, x, y, spriteKey);
-    // if(!spriteKey) {
-    //   this.width = properties.width
-    //   this.height = properties.height
-    //   console.log("MineEntrance", {width: this.width, height: this.height})
-    // }
-    //console.log(properties)
 
     let centerX, centerY;
     if (properties.width && properties.height) {
@@ -3168,7 +3162,8 @@ class MineEntrance extends Phaser.Sprite {
 
   collideWith(obj) {
     console.log("Transition to ", this.properties.LayerName);
-    this.onTransition.dispatch(this.properties.LayerName);
+    console.log(this.properties);
+    this.onTransition.dispatch(this.properties);
   }
 
   setupPhysics() {
@@ -11200,7 +11195,7 @@ class InputState {
       this.miner.position.set(this.loader.playerStart.x, this.loader.playerStart.y);
     });
     this.map = this.loader.loadMap('cave');
-    this.loader.loadLayer('Overworld');
+    this.loader.loadLayer('Overworld', true);
     this.game.add.existing(this.miner);
 
     // group(parent, name, addToStage, enableBody, physicsBodyType);
@@ -11368,7 +11363,7 @@ class LevelLoader {
     });
   }
 
-  loadLayer(name) {
+  loadLayer(name, setPlayerCoordinates = false) {
     const SCALE = 3;
     let map = this.map;
     const game = this.game;
@@ -11384,6 +11379,12 @@ class LevelLoader {
     this.layer = map.createLayer(name);
     this.layer.setScale(SCALE);
     this.layer.resizeWorld();
+
+    if (setPlayerCoordinates) {
+      let x = this.layer.layer.properties.PlayerStartX * SCALE;
+      let y = this.layer.layer.properties.PlayerStartY * SCALE;
+      this._setPlayerStart(x, y);
+    }
 
     this._collidables = game.add.group(this.game.world, 'collidables', false, true, Phaser.Physics.ARCADE);
 
@@ -11405,7 +11406,6 @@ class LevelLoader {
     let x, y;
 
     layerObjects.forEach((obj, index, array) => {
-
       properties = obj.properties || {};
 
       // TODO: get center of obj for placement.
@@ -11416,13 +11416,11 @@ class LevelLoader {
       properties.width = obj.width * SCALE;
       properties.height = obj.height * SCALE;
 
-      if (obj.type === 'MinerStart') {
-        this.playerStart.set(x, y);
-        return;
-      } else if (obj.type === 'MineEntrance') {
+      if (obj.type === 'MineEntrance') {
         mapObjInstance = new __WEBPACK_IMPORTED_MODULE_0__sprites_MineEntrance__["a" /* default */](game, x, y, properties);
-        mapObjInstance.onTransition.add(newLayerName => {
-          this.loadLayer(newLayerName);
+        mapObjInstance.onTransition.add(properties => {
+          this._setPlayerStart(properties.TransportX * SCALE, properties.TransportY * SCALE);
+          this.loadLayer(properties.LayerName);
         });
       } else {
         mapObjInstance = new LevelLoader.ObjMapper[obj.type](game, x, y, properties);
@@ -11435,6 +11433,11 @@ class LevelLoader {
         game.add.existing(mapObjInstance);
       }
     });
+  }
+
+  _setPlayerStart(x, y) {
+    console.log(`Setting player start: (${x}, ${y})`);
+    this.playerStart.set(x, y);
   }
 
   setupPhysics() {

@@ -20,7 +20,7 @@ export default class extends Phaser.State {
       this.miner.position.set(this.loader.playerStart.x, this.loader.playerStart.y)
     })
     this.map = this.loader.loadMap('cave')
-    this.loader.loadLayer('Overworld');
+    this.loader.loadLayer('Overworld', true);
     this.game.add.existing(this.miner);
 
     // group(parent, name, addToStage, enableBody, physicsBodyType);

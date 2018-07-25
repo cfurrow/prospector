@@ -2,13 +2,7 @@ export default class MineEntrance extends Phaser.Sprite {
   constructor(game, x, y, properties) {
     let spriteKey = properties.SpriteKey
 
-    super(game, x, y, spriteKey)
-    // if(!spriteKey) {
-    //   this.width = properties.width
-    //   this.height = properties.height
-    //   console.log("MineEntrance", {width: this.width, height: this.height})
-    // }
-    //console.log(properties)
+    super(game, x, y, spriteKey);
 
     let centerX, centerY
     if(properties.width && properties.height) {
@@ -39,8 +33,9 @@ export default class MineEntrance extends Phaser.Sprite {
   }
 
   collideWith(obj) {
-    console.log("Transition to ", this.properties.LayerName)
-    this.onTransition.dispatch(this.properties.LayerName)
+    console.log("Transition to ", this.properties.LayerName);
+    console.log(this.properties);
+    this.onTransition.dispatch(this.properties)
   }
 
   setupPhysics() {

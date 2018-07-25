@@ -53,7 +53,7 @@ export default class LevelLoader {
     })
   }
 
-  loadLayer(name) {
+  loadLayer(name, setPlayerCoordinates=false) {
     const SCALE = 3;
     let map = this.map;
     const game = this.game;
@@ -66,9 +66,16 @@ export default class LevelLoader {
       this.collidables.destroy();
     }
 
+
     this.layer = map.createLayer(name);
     this.layer.setScale(SCALE);
     this.layer.resizeWorld();
+
+    if(setPlayerCoordinates) {
+      let x = this.layer.layer.properties.PlayerStartX*SCALE;
+      let y = this.layer.layer.properties.PlayerStartY*SCALE;
+      this._setPlayerStart(x, y);
+    }
 
     this._collidables = game.add.group(this.game.world, 'collidables', false, true, Phaser.Physics.ARCADE);
 
@@ -90,24 +97,21 @@ export default class LevelLoader {
     let x, y;
 
     layerObjects.forEach( (obj, index, array) => {
-
       properties = obj.properties || {}
 
       // TODO: get center of obj for placement.
       console.log(obj.type, obj)
-      
+
       x = obj.x * SCALE
       y = obj.y * SCALE
-      properties.width = obj.width * SCALE
+      properties.width  = obj.width * SCALE
       properties.height = obj.height * SCALE
 
-      if(obj.type === 'MinerStart') {
-        this.playerStart.set(x, y);
-        return;
-      } else if (obj.type === 'MineEntrance') {
+      if (obj.type === 'MineEntrance') {
         mapObjInstance = new MineEntrance(game, x, y, properties);
-        mapObjInstance.onTransition.add((newLayerName) => {
-          this.loadLayer(newLayerName)
+        mapObjInstance.onTransition.add((properties) => {
+          this._setPlayerStart(properties.TransportX *SCALE, properties.TransportY*SCALE);
+          this.loadLayer(properties.LayerName)
         })
       } else {
         mapObjInstance = new LevelLoader.ObjMapper[obj.type](game, x, y, properties);
@@ -120,6 +124,11 @@ export default class LevelLoader {
         game.add.existing(mapObjInstance);
       }
     })
+  }
+
+  _setPlayerStart(x, y) {
+    console.log(`Setting player start: (${x}, ${y})`)
+    this.playerStart.set(x,y);
   }
 
   setupPhysics() {
