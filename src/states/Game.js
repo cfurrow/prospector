@@ -48,7 +48,7 @@ export default class extends Phaser.State {
     this.squirrelFont = game.add.retroFont('knightHawks', 31, 25, Phaser.RetroFont.TEXT_SET6, 10, 1, 1);
 
     var squirrelCountContainer = game.add.image(game.width-200, game.height-50, this.squirrelFont);
-    squirrelCountContainer.tint = Math.random() * 0xFFFFFF;
+    squirrelCountContainer.tint = 0xFFF000;
     squirrelCountContainer.anchor.set(0.5, 1);
     squirrelCountContainer.scale.set(2,2);
     squirrelCountContainer.fixedToCamera = true;
